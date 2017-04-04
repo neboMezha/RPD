@@ -3,27 +3,55 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Battle_Script : MonoBehaviour {
-	public GameObject d1;
+	//public GameObject d1;
+	public Scene_Script ss;
+
+	public GameObject[] dogs;		//need to create DogRoster Array in Main/Map scene to take in the selected dogs
+	private float timer;
+	private float timeHolder;
+	public int knockedOut;
 
 	// Use this for initialization
 	void Start () {
-		//d1.GetComponent<Button> ().onclick.AddListener (Attack);
-		GameObject dog = Instantiate(d1, new Vector2(-50, 100), Quaternion.identity);	 		// instantiates teh prefab
-		dog.GetComponent("Dog_Script").name = "God Dog";										// sets the name to the dog object
-		dog.transform.SetParent (GameObject.FindGameObjectWithTag("Canvas").transform, false);	// adds teh dog as child of teh canvas
+		knockedOut = 0;
+		dogs = new GameObject[3];
+		GameObject[] roster = GameObject.Find ("GameManager").GetComponent<Game_Manager>().dogRoster;
+		for (int i = 0; i < roster.Length; i++) {
+			dogs[i] = Instantiate(roster[i], new Vector2(-50, 100-(i*100)), Quaternion.identity);	 		// instantiates teh prefab
+			Debug.Log (dogs[i] + " instantiated");
+			string name = dogs [i].GetComponent ("Dog_Script").name.Substring (0, dogs [i].GetComponent ("Dog_Script").name.Length - 7);
+			dogs[i].GetComponent("Dog_Script").name = name;													// sets the name to the dog object
+			dogs[i].transform.SetParent (GameObject.FindGameObjectWithTag("Canvas").transform, false);
 
-		GameObject dog2 = Instantiate(d1, new Vector2(-50, 0), Quaternion.identity);	 		// instantiates teh prefab
-		dog2.GetComponent("Dog_Script").name = "Dog Adam";										// sets the name to the dog object
-		dog2.transform.SetParent (GameObject.FindGameObjectWithTag("Canvas").transform, false);	// adds teh dog as child of teh canvas
-
-		GameObject dog3 = Instantiate(d1, new Vector2(-50, -100), Quaternion.identity);	 		// instantiates teh prefab
-		dog3.GetComponent("Dog_Script").name = "Dog Eve";										// sets the name to the dog object
-		dog3.transform.SetParent (GameObject.FindGameObjectWithTag("Canvas").transform, false);	// adds teh dog as child of teh canvas
-
+		}
+		ss = GameObject.Find ("SceneManager").GetComponent<Scene_Script>();
 	}
 
 	// Update is called once per frame
 	void Update () {
-		
+		timer += Time.deltaTime; 		//time for Cat to attack
+		if (timer >= 3.0f) {
+			timer = 0;
+
+			int target = Random.Range (0, dogs.Length);					//cat picks random dog
+			while (dogs [target].GetComponent<Dog_Script> ().koed) { 	//if the dog is KOed, pick new target
+				target = Random.Range (0, dogs.Length);
+			}
+			Debug.Log ("Cat Attacked " + dogs[target].name); 			//cat hits dog
+
+			dogs [target].GetComponent<Dog_Script> ().TakeDamage (); 	//dog takes damage
+		}
+
+		for (int i = 0; i < dogs.Length; i++) {							//checks for KOed dogs
+			if (dogs [i].GetComponent<Dog_Script> ().koed) {
+				//dogs [i].transform.position.x = 0;
+				dogs[i].GetComponent<Renderer>().enabled = false;		//hides KOed ones
+			}
+		}
+
+		if (knockedOut == dogs.Length) {								// if all KOed, exit battle
+			GameObject.Find ("GameManager").GetComponent<Game_Manager>().battling = false;
+			ss.UnloadScene(2);
+		}
 	}
 }
