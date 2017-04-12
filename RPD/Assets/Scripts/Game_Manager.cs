@@ -2,13 +2,32 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(AudioSource))]
 public class Game_Manager : MonoBehaviour {
 	public Scene_Script ss;
-	public GameObject[] allDogs = new GameObject[4];
+	public GameObject[] allDogs = new GameObject[5];
 	public GameObject[] dogRoster;
 	public bool battling;
+
+	enum GameState { map, battle, teamSelect };		// used to control input and stuff and what state the game should be in, regardless of overlapping scenes
+	GameState currentState;
+
+	// AUDIO //
+	AudioSource audio;
+	public AudioClip mapBGM;
+	public AudioClip battleBGM;
+
+	public AudioClip selectionSound;
+	public AudioClip cancelSound;
+
 	// Use this for initialization
 	void Start () {
+		audio = GetComponent<AudioSource>();
+
+		// Initit map defauts at first since map is the first to load GameManager object
+		currentState = GameState.map;
+		//audio.Play (mapBGM);
+
 		battling = false;
 		ss = GameObject.Find ("SceneManager").GetComponent<Scene_Script>();
 		dogRoster = new GameObject[3];
@@ -16,13 +35,10 @@ public class Game_Manager : MonoBehaviour {
 		//allDogs[0] = d1;
 		//allDogs[1] = d2;
 		//allDogs[2] = d3;
-		for(int i=0; i<dogRoster.Length; i++){
-			dogRoster [i] = allDogs[Random.Range(0, allDogs.Length)];
-		}
 
-		//dogRoster [0] = allDogs[Random.Range(0, allDogs.Length)];		//adds random dogs from all dogs
-		//dogRoster [1] = allDogs[Random.Range(0, allDogs.Length)];
-		//dogRoster [2] = allDogs[Random.Range(0, allDogs.Length)];
+		dogRoster [0] = allDogs[Random.Range(0, allDogs.Length)];		//adds random dogs from all dogs
+		dogRoster [1] = allDogs[Random.Range(0, allDogs.Length)];
+		dogRoster [2] = allDogs[Random.Range(0, allDogs.Length)];
 		//dogRoster [3] = allDogs[Random.Range(0, allDogs.Length)];
 
 		//for (int i = 0; i < dogRoster.Length; i++) {
@@ -34,12 +50,27 @@ public class Game_Manager : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-		if (Input.GetKeyDown(KeyCode.Return)){
-			battling = true;
-			ss.AddScene(2);
+		// MAP SELECT STATE-----------------------------------
+		if (currentState == GameState.map) {
+			if (Input.GetKeyDown (KeyCode.Return)) {		// to battle
+				audio.Stop();
+				audio.PlayOneShot (selectionSound);
+				battling = true;		//
+				ss.AddScene (2);
+				currentState = GameState.battle;
+			}
+			if (Input.GetKeyDown (KeyCode.Space)) {			// to team select
+				audio.Stop();
+				audio.PlayOneShot (selectionSound);
+				ss.AddScene (3);
+				currentState = GameState.teamSelect;
+			}
 		}
-		if (Input.GetKeyDown(KeyCode.Space)){
-			ss.AddScene(3);
+
+
+		// BATTLING STATE--------------------------------------
+		if (currentState == GameState.battle) {
+		
 		}
 	}
 }
