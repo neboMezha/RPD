@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// my god please center everything in the scenes including all game object script holders 0,0,0
+
 [RequireComponent(typeof(AudioSource))]
 public class Game_Manager : MonoBehaviour {
 	public Scene_Script ss;
@@ -26,7 +28,8 @@ public class Game_Manager : MonoBehaviour {
 
 		// Initit map defauts at first since map is the first to load GameManager object
 		currentState = GameState.map;
-		//audio.Play (mapBGM);
+
+		// GET CANVAS EVENTHANDLER OBJECTS (***need to be disabled when not on that gamestate)
 
 		battling = false;
 		ss = GameObject.Find ("SceneManager").GetComponent<Scene_Script>();
@@ -70,7 +73,7 @@ public class Game_Manager : MonoBehaviour {
 
 		// BATTLING STATE--------------------------------------
 		if (currentState == GameState.battle) {
-		
+			
 		}
 	}
 }
