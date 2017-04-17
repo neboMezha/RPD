@@ -14,7 +14,8 @@ public class Team_Script : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		buttons = GameObject.FindGameObjectsWithTag ("Button"); //saves all buttons in an array
+		//buttons = GameObject.FindGameObjectsWithTag ("Button"); //saves all buttons in an array
+		buttons = Button.FindObjectsOfType(typeof(Button)) as Button[];
 
 		GameObject[] availableDogs = GameObject.Find ("GameManager").GetComponent<Game_Manager> ().ownedDogs; 
 

@@ -85,6 +85,7 @@ public class Dog_Script : MonoBehaviour {
 			koed = true;
 
 			GameObject.Find("BattleManager").GetComponent<Battle_Script>().knockedOut++;
+			Debug.Log (GameObject.Find("BattleManager").GetComponent<Battle_Script>().knockedOut);
 		}
 	}
 }

@@ -46,7 +46,8 @@ public class Battle_Script : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-		/*timer += Time.deltaTime; 		//time for Cat to attack
+		timer += Time.deltaTime; 		//time for Cat to attack
+		//----Cat Attack
 		if (timer >= 3.0f) {
 			timer = 0;
 			int rand = Random.Range(0,30);
@@ -76,7 +77,8 @@ public class Battle_Script : MonoBehaviour {
 
 			dogs [target].GetComponent<Dog_Script> ().TakeDamage (); 	//dog takes damage
 		}
-		*/
+
+		//-----Checking for KOs
 		for (int i = 0; i < dogs.Length; i++) {							//checks for KOed dogs
 			if (dogs [i].GetComponent<Dog_Script> ().koed) {
 				dogs[i].GetComponent<Renderer>().enabled = false;		//hides KOed ones
@@ -89,7 +91,7 @@ public class Battle_Script : MonoBehaviour {
 			for (int i = 0; i < dogs.Length; i++) {
 				Destroy (dogs[i]);
 			}
-			//ss.UnloadScene(2);
+			ss.UnloadScene(2);
 		}
 	}
 
