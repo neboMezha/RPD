@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(AudioSource))]
 public class Dog_Script : MonoBehaviour {
 	public bool attacking;
 	public bool koed = false;
@@ -10,6 +11,13 @@ public class Dog_Script : MonoBehaviour {
 	public int atk;
 	public double coolDown;
 	public int aggro;
+
+	// AUDIO //
+	new AudioSource audio;
+	public AudioClip attackSound;
+	public AudioClip damageSound;
+	public AudioClip readySound;
+
 	// Use this for initialization
 	void Start () {
 		koed = false;
@@ -36,13 +44,13 @@ public class Dog_Script : MonoBehaviour {
 			atk = 1;
 		}
 		else if (this.name == "Chihuawarrior"){
-				hp = 3;
-				coolDown = 6;
-				aggro = 10;
-				atk = 3;
-			}
+			hp = 3;
+			coolDown = 6;
+			aggro = 10;
+			atk = 3;
+		}
 	}
-	
+
 	// Update is called once per frame
 	void Update () {
 		if (attacking) {

@@ -14,8 +14,17 @@ public class Battle_Script : MonoBehaviour {
 	private float timeHolder;
 	public int knockedOut;
 
+	// AUDIO //
+	new AudioSource audio;
+	public AudioClip catDamageSound;
+	public AudioClip catAttackSound;
+
+
 	// Use this for initialization
 	void Start () {
+		// Initialize Audio Source Component
+		audio = GetComponent<AudioSource>();
+
 		GameObject.Find ("Canvas").GetComponent<CanvasGroup> ().alpha = 0f;
 
 		buttons = new Button[14];
@@ -31,9 +40,9 @@ public class Battle_Script : MonoBehaviour {
 		GameObject[] roster = GameObject.Find ("GameManager").GetComponent<Game_Manager>().dogRoster;
 
 		for (int i = 0; i < roster.Length; i++) {
+
 			buttons [i].enabled = true;
 			dogs [i] = Instantiate(roster[i], buttons[i].transform.position, Quaternion.identity);
-			//Debug.Log (dogs[i] + " instantiated");
 			string name = dogs [i].GetComponent ("Dog_Script").name.Substring (0, dogs [i].GetComponent ("Dog_Script").name.Length - 7);
 			dogs[i].GetComponent("Dog_Script").name = name;	
 			buttons [i].onClick.AddListener (dogs [i].GetComponent <Dog_Script>().Attack);
@@ -56,12 +65,16 @@ public class Battle_Script : MonoBehaviour {
 			int target = 0;
 			if (rand >= 10) {
 				for (int j = 0; j < dogs.Length; j++) {
-					if (dogs [j].GetComponent<Dog_Script> ().koed == false) {
-						if (dogs [j].GetComponent<Dog_Script> ().aggro >= agr) { 	//if next dog has higher aggro, make his target
-							agr = dogs [j].GetComponent<Dog_Script> ().aggro;
-							target = j;
+					//if (dogs[j] != null)		////////////////////////////<- test by Aiden
+					//{
+						if (dogs [j].GetComponent<Dog_Script> ().koed == false) {
+							if (dogs [j].GetComponent<Dog_Script> ().aggro >= agr) { 	//if next dog has higher aggro, make his target
+								agr = dogs [j].GetComponent<Dog_Script> ().aggro;
+								target = j;
+							}
 						}
-					}
+					//}
+
 				}
 				Debug.Log ("Chose strongest");
 			} 
@@ -80,9 +93,11 @@ public class Battle_Script : MonoBehaviour {
 
 		//-----Checking for KOs
 		for (int i = 0; i < dogs.Length; i++) {							//checks for KOed dogs
-			if (dogs [i].GetComponent<Dog_Script> ().koed) {
-				dogs[i].GetComponent<Renderer>().enabled = false;		//hides KOed ones
-				buttons[i].enabled = false;
+			if (dogs [i] != null) {
+				if (dogs [i].GetComponent<Dog_Script> ().koed) {
+					dogs [i].GetComponent<Renderer> ().enabled = false;		//hides KOed ones
+					buttons [i].enabled = false;
+				}
 			}
 		}
 

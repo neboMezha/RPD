@@ -7,32 +7,33 @@ using UnityEngine.UI;
 public class Team_Script : MonoBehaviour {
 	public Button[] buttons;
 	//set the sprites to put into buttons
-	public Sprite mage;
-	public Sprite ninja;
-	public Sprite warrior;
-	public Sprite healer;
+	public Image mage;
+	public Image ninja;
+	public Image warrior;
+	public Image healer;
 
 	// Use this for initialization
 	void Start () {
-		//buttons = GameObject.FindGameObjectsWithTag ("Button"); //saves all buttons in an array
+		//buttons = GameObject.FindGameObjectsWithTag ("Button"); //saves all butatons in an array
 		buttons = Button.FindObjectsOfType(typeof(Button)) as Button[];
 
-		GameObject[] availableDogs = GameObject.Find ("GameManager").GetComponent<Game_Manager> ().ownedDogs; 
+		List<GameObject> availableDogs = GameObject.Find ("GameManager").GetComponent<Game_Manager> ().owned; 
 
-		for (int i = 0; i < buttons.Length; i++) {
+		for (int i = 0; i < 28; i++) {
 			if (availableDogs [i] != null) {
-				//set the sprite to what it needs to be
+				Debug.Log ("Dog Available");
+				buttons [i].image = ninja;
 			} 
 			else {
-				//disable the button
+				buttons [i].enabled = false;
 			}
 		}
 
 	}
-	
+
 	// Update is called once per frame
 	void Update () {
-		
+
 	}
 
 	public void Back(){
@@ -42,8 +43,8 @@ public class Team_Script : MonoBehaviour {
 	//on click
 	public void SelectDog(){
 		//if not selected
-			//add to GameManager-> dogRoster
+		//add to GameManager-> dogRoster
 		//else
-			//find same dog in the roster and remove it
+		//find same dog in the roster and remove it
 	}
 }

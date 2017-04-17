@@ -5,10 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class Scene_Script : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-		
-	}
+	void Start () {	}
 	
 	public void ChangeScene (int targetSceneID) {
 		Debug.Log("ChangeScene called: #" + targetSceneID);
