@@ -5,13 +5,14 @@ using UnityEngine;
 public class Game_Manager : MonoBehaviour {
 	public Scene_Script ss;
 	public GameObject[] allDogs = new GameObject[4];
+	public GameObject[] ownedDogs = new GameObject[28];
 	public GameObject[] dogRoster;
 	public bool battling;
 	// Use this for initialization
 	void Start () {
 		battling = false;
 		ss = GameObject.Find ("SceneManager").GetComponent<Scene_Script>();
-		dogRoster = new GameObject[3];
+		dogRoster = new GameObject[14];
 
 		//allDogs[0] = d1;
 		//allDogs[1] = d2;

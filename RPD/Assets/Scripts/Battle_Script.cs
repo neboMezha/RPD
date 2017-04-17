@@ -40,18 +40,20 @@ public class Battle_Script : MonoBehaviour {
 
 		}
 		ss = GameObject.Find ("SceneManager").GetComponent<Scene_Script>();
+		//Debug.Log (dogs[0]);
 	}
 
 	// Update is called once per frame
 	void Update () {
-		timer += Time.deltaTime; 		//time for Cat to attack
+
+		/*timer += Time.deltaTime; 		//time for Cat to attack
 		if (timer >= 3.0f) {
 			timer = 0;
-			int rand = Random.Range(0,25);
+			int rand = Random.Range(0,30);
 
 			int agr = 0;
 			int target = 0;
-			if (rand > 10) {
+			if (rand >= 10) {
 				for (int j = 0; j < dogs.Length; j++) {
 					if (dogs [j].GetComponent<Dog_Script> ().koed == false) {
 						if (dogs [j].GetComponent<Dog_Script> ().aggro >= agr) { 	//if next dog has higher aggro, make his target
@@ -71,20 +73,10 @@ public class Battle_Script : MonoBehaviour {
 
 				Debug.Log ("Chose random");
 			}
-				
-			/*
-			int target = Random.Range (0, dogs.Length);					//cat picks random dog
-
-			while (dogs [target].GetComponent<Dog_Script> ().koed) { 	//if the dog is KOed, pick new target
-				target = Random.Range (0, dogs.Length);
-			}
-
-			//Debug.Log ("Cat Attacked " + dogs[target].name); 			//cat hits dog
-			*/
 
 			dogs [target].GetComponent<Dog_Script> ().TakeDamage (); 	//dog takes damage
 		}
-
+		*/
 		for (int i = 0; i < dogs.Length; i++) {							//checks for KOed dogs
 			if (dogs [i].GetComponent<Dog_Script> ().koed) {
 				dogs[i].GetComponent<Renderer>().enabled = false;		//hides KOed ones
@@ -97,7 +89,7 @@ public class Battle_Script : MonoBehaviour {
 			for (int i = 0; i < dogs.Length; i++) {
 				Destroy (dogs[i]);
 			}
-			ss.UnloadScene(2);
+			//ss.UnloadScene(2);
 		}
 	}
 

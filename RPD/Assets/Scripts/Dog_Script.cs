@@ -14,7 +14,7 @@ public class Dog_Script : MonoBehaviour {
 	void Start () {
 		koed = false;
 		attacking = false;
-		hp = 10;
+		//hp = 10;
 
 		//-------------SETTING UP DOG STATS
 		if (this.name == "Shinobi Inu") {
@@ -35,7 +35,7 @@ public class Dog_Script : MonoBehaviour {
 			aggro = 2;
 			atk = 1;
 		}
-		else {
+		else if (this.name == "Chihuawarrior"){
 				hp = 3;
 				coolDown = 6;
 				aggro = 10;
@@ -54,19 +54,25 @@ public class Dog_Script : MonoBehaviour {
 
 	}
 
-	public void Attack(){
-		if (GameObject.Find ("GameManager").GetComponent<Game_Manager> ().battling == true) {				//IF IN BATTLE
-			attacking = true;
-			//Debug.Log (this.name + " attacked"); //uses the Object's name in the heirarchy as the name
-			GameObject.Find ("BattleManager").GetComponent<Battle_Script> ().catHP -= atk;
-			Debug.Log ("Cat HP: " + GameObject.Find ("BattleManager").GetComponent<Battle_Script> ().catHP);
-		} 
-		else {																								//ELSE IN TEAM BUILDER
-			GameObject.Find ("TeamManager").GetComponent<Team_Script> ().selectedDog = this.gameObject;
-			int slot = GameObject.Find ("TeamManager").GetComponent<Team_Script> ().slot;
-			Debug.Log (this.name + " Chosen for Slot " + slot);
+	public void Attack(){			//IF IN BATTLE
+		if (this.name == "Saint Bernard") {
+			Battle_Script gms = GameObject.Find ("BattleManager").GetComponent<Battle_Script> ();
+			int rand = Random.Range (0, gms.dogs.Length);
+			//gms.dogRoster [0].GetComponent<Dog_Script> ().Heal ();
+			gms.dogs [rand].GetComponent<Dog_Script>().hp += 1;
+			Debug.Log ("Healed " + gms.dogs [rand].name);
 
 		}
+		//attacking = true;
+		//Debug.Log (this.name + " attacked"); //uses the Object's name in the heirarchy as the name
+		else {
+			GameObject.Find ("BattleManager").GetComponent<Battle_Script> ().catHP -= atk;
+			Debug.Log ("Cat HP: " + GameObject.Find ("BattleManager").GetComponent<Battle_Script> ().catHP);
+		}
+	}
+
+	public void Heal(){
+		hp += 1;
 	}
 
 	public void TakeDamage(){
