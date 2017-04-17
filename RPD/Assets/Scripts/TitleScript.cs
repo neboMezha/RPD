@@ -5,16 +5,12 @@ using UnityEngine;
 [RequireComponent(typeof(AudioSource))]
 public class TitleScript : MonoBehaviour {
 	// AUDIO //
-	AudioSource audio;
+	new AudioSource audio;
 	public AudioClip selectionSound;
 
 	// Use this for initialization
-	void Start () {
-		
-	}
+	void Start () {}
 	
 	// Update is called once per frame
-	void Update () {
-		
-	}
+	void Update () {}
 }
