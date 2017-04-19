@@ -22,10 +22,16 @@ public class Game_Manager : MonoBehaviour {
 	public AudioClip selectionSound;
 	public AudioClip cancelSound;
 
+	// For mapscene
+	public List<GameObject> mapButtons;
+
 	// Use this for initialization
 	void Start () {
 
 		audio = GetComponent<AudioSource>();
+
+		// Init map buttons
+
 
 		// Initit map defauts at first since map is the first to load GameManager object
 		currentState = GameState.map;
@@ -72,7 +78,7 @@ public class Game_Manager : MonoBehaviour {
 	void Update () {
 		// MAP SELECT STATE-----------------------------------
 		if (currentState == GameState.map) {
-			if (Input.GetKeyDown (KeyCode.Return)) {		// to battle
+			if (Input.GetKeyDown (KeyCode.Return)) {		// to battle		// MAKE CLICK ON A BAD CAT
 				audio.Stop();
 				audio.PlayOneShot (selectionSound, 1.0f);
 				battling = true;		//
@@ -81,7 +87,7 @@ public class Game_Manager : MonoBehaviour {
 
 				// TO DO: go through and make all the other eventsystems and canvas inactive, and activate the new scenes'
 			}
-			if (Input.GetKeyDown (KeyCode.Space)) {			// to team select
+			if (Input.GetKeyDown (KeyCode.Space)) {							// to team select
 				audio.Stop();
 				audio.PlayOneShot (selectionSound, 1.0f);
 				ss.AddScene (3);
