@@ -35,12 +35,13 @@ public class Battle_Script : MonoBehaviour {
 		}
 
 		knockedOut = 0;
-		int size = GameObject.Find ("GameManager").GetComponent<Game_Manager> ().dogRoster.Length;
+		int size = GameObject.Find ("GameManager").GetComponent<Game_Manager> ().dogRoster.Count;
 		dogs = new GameObject[size];
-		GameObject[] roster = GameObject.Find ("GameManager").GetComponent<Game_Manager>().dogRoster;
+		List<GameObject> roster = GameObject.Find ("GameManager").GetComponent<Game_Manager>().dogRoster;
 
-		for (int i = 0; i < roster.Length; i++) {
-
+		Debug.Log (GameObject.Find ("GameManager").GetComponent<Game_Manager>().dogRoster[1]);
+		//----instantiates all the dogs in the roster
+		for (int i = 0; i < roster.Count; i++) {
 			buttons [i].enabled = true;
 			dogs [i] = Instantiate(roster[i], buttons[i].transform.position, Quaternion.identity);
 			string name = dogs [i].GetComponent ("Dog_Script").name.Substring (0, dogs [i].GetComponent ("Dog_Script").name.Length - 7);
@@ -49,7 +50,6 @@ public class Battle_Script : MonoBehaviour {
 
 		}
 		ss = GameObject.Find ("SceneManager").GetComponent<Scene_Script>();
-		//Debug.Log (dogs[0]);
 	}
 
 	// Update is called once per frame
@@ -65,16 +65,12 @@ public class Battle_Script : MonoBehaviour {
 			int target = 0;
 			if (rand >= 10) {
 				for (int j = 0; j < dogs.Length; j++) {
-					//if (dogs[j] != null)		////////////////////////////<- test by Aiden
-					//{
-						if (dogs [j].GetComponent<Dog_Script> ().koed == false) {
-							if (dogs [j].GetComponent<Dog_Script> ().aggro >= agr) { 	//if next dog has higher aggro, make his target
-								agr = dogs [j].GetComponent<Dog_Script> ().aggro;
-								target = j;
-							}
+					if (dogs [j].GetComponent<Dog_Script> ().koed == false) {
+						if (dogs [j].GetComponent<Dog_Script> ().aggro >= agr) { 	//if next dog has higher aggro, make his target
+							agr = dogs [j].GetComponent<Dog_Script> ().aggro;
+							target = j;
 						}
-					//}
-
+					}
 				}
 				Debug.Log ("Chose strongest");
 			} 
@@ -106,6 +102,8 @@ public class Battle_Script : MonoBehaviour {
 			for (int i = 0; i < dogs.Length; i++) {
 				Destroy (dogs[i]);
 			}
+
+			GameObject.Find ("GameManager").GetComponent<Game_Manager> ().ChangeState ();
 			ss.UnloadScene(2);
 		}
 	}

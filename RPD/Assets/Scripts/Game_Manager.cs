@@ -7,7 +7,7 @@ public class Game_Manager : MonoBehaviour {
 	public GameObject[] allDogs = new GameObject[4];
 	//public GameObject[] ownedDogs;
 	public List<GameObject> owned;
-	public GameObject[] dogRoster;
+	public List<GameObject> dogRoster;
 
 	[HideInInspector] public bool battling;
 
@@ -22,16 +22,10 @@ public class Game_Manager : MonoBehaviour {
 	public AudioClip selectionSound;
 	public AudioClip cancelSound;
 
-	// For mapscene
-	public List<GameObject> mapButtons;
-
 	// Use this for initialization
 	void Start () {
 
 		audio = GetComponent<AudioSource>();
-
-		// Init map buttons
-
 
 		// Initit map defauts at first since map is the first to load GameManager object
 		currentState = GameState.map;
@@ -45,6 +39,16 @@ public class Game_Manager : MonoBehaviour {
 		owned.Add (allDogs [3]);
 		owned.Add (allDogs [0]);
 
+		owned.Add (allDogs [1]);
+		owned.Add (allDogs [2]);
+		owned.Add (allDogs [2]);
+		owned.Add (allDogs [1]);
+		/*
+		//set all dogs 28 times
+		for(int j=0; j<28; j++){
+			owned.Add (allDogs [Random.Range(0,4)]);
+		}
+		*/
 
 		ss = GameObject.Find ("SceneManager").GetComponent<Scene_Script>();
 
@@ -58,18 +62,25 @@ public class Game_Manager : MonoBehaviour {
 		else
 			dogRoster = new GameObject[14];
 
-		*/
 		//--Sets length of roster
 		if(owned.Count < 14)
 			dogRoster = new GameObject[owned.Count];
 		else
 			dogRoster = new GameObject[14];
 
+		*/
 
 		//--TEMPORARY
 		//--Assign dogs to roster slots
-		for(int i=0; i<dogRoster.Length; i++){
-			dogRoster [i] = owned[i];
+		int teamSize = 0;
+		if (owned.Count < 14)
+			teamSize = owned.Count;
+		else
+			teamSize = 14;
+		
+		for(int i=0; i<4; i++){
+			dogRoster.Add(owned[i]);
+			Debug.Log ("Added " + owned[i].name);
 		}
 
 	}
@@ -78,7 +89,7 @@ public class Game_Manager : MonoBehaviour {
 	void Update () {
 		// MAP SELECT STATE-----------------------------------
 		if (currentState == GameState.map) {
-			if (Input.GetKeyDown (KeyCode.Return)) {		// to battle		// MAKE CLICK ON A BAD CAT
+			if (Input.GetKeyDown (KeyCode.Return)) {		// to battle
 				audio.Stop();
 				audio.PlayOneShot (selectionSound, 1.0f);
 				battling = true;		//
@@ -87,10 +98,19 @@ public class Game_Manager : MonoBehaviour {
 
 				// TO DO: go through and make all the other eventsystems and canvas inactive, and activate the new scenes'
 			}
-			if (Input.GetKeyDown (KeyCode.Space)) {							// to team select
+			if (Input.GetKeyDown (KeyCode.Space)) {			// to team select
 				audio.Stop();
 				audio.PlayOneShot (selectionSound, 1.0f);
 				ss.AddScene (3);
+				currentState = GameState.teamSelect;
+
+				// TO DO: go through and make all the other eventsystems and canvas inactive, and activate the new scenes'
+			}
+
+			if (Input.GetKeyDown (KeyCode.LeftShift)) {			// to team select
+				audio.Stop();
+				audio.PlayOneShot (selectionSound, 1.0f);
+				ss.AddScene (4);
 				currentState = GameState.teamSelect;
 
 				// TO DO: go through and make all the other eventsystems and canvas inactive, and activate the new scenes'
@@ -102,5 +122,8 @@ public class Game_Manager : MonoBehaviour {
 		if (currentState == GameState.battle) {
 			// TO DO: input handers here
 		}
+	}
+	public void ChangeState(){
+		currentState = GameState.map;
 	}
 }

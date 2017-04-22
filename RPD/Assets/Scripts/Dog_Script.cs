@@ -12,6 +12,11 @@ public class Dog_Script : MonoBehaviour {
 	public double coolDown;
 	public int aggro;
 
+	private int timer2;
+	private Vector3 pos;
+	private Vector3 posOr;
+	private float mover;
+
 	// AUDIO //
 	new AudioSource audio;
 	public AudioClip attackSound;
@@ -20,6 +25,11 @@ public class Dog_Script : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		pos = transform.position;
+		posOr = transform.position;
+		timer2 = 0;
+		mover = 0;
+
 		koed = false;
 		attacking = false;
 		//hp = 10;
@@ -52,17 +62,42 @@ public class Dog_Script : MonoBehaviour {
 	}
 
 	// Update is called once per frame
+	//--GLITCHY
 	void Update () {
+		//--Attack Animation
 		if (attacking) {
-			for (int i = 0; i <= 30; i++) {
-				if (i == 30)
-					attacking = false;
+			//after 14 frames, turn off attacking
+			if (timer2 == 14) {
+				attacking = false;
+				timer2 = 0;
 			}
-		}
+			//move forward
+			if (timer2 < 7) {
+				transform.position = new Vector3 (pos.x + mover, pos.y, pos.z);
+			} 
+			//at midpoint, set the surent position as pos
+			else if (timer2 == 7) {
+				pos = transform.position;
+				mover = 0;
+			} 
+			//move backwards
+			else {
+				transform.position = new Vector3 (pos.x - mover, pos.y, pos.z);
+			}
 
+			mover += 0.1f;
+			timer2++;
+
+		} 
+		//if not attacking, set everything to original pos
+		else {
+			pos = posOr;
+			transform.position = posOr;
+		}
 	}
 
 	public void Attack(){			//IF IN BATTLE
+		attacking = true;
 		if (this.name == "Saint Bernard") {
 			Battle_Script gms = GameObject.Find ("BattleManager").GetComponent<Battle_Script> ();
 			int rand = Random.Range (0, gms.dogs.Length);

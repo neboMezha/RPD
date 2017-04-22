@@ -7,28 +7,58 @@ using UnityEngine.UI;
 public class Team_Script : MonoBehaviour {
 	public Button[] buttons;
 	//set the sprites to put into buttons
-	public Image mage;
-	public Image ninja;
-	public Image warrior;
-	public Image healer;
+	public Sprite mage;
+	public Sprite ninja;
+	public Sprite warrior;
+	public Sprite healer;
+	private List<GameObject> availableDogs;
 
+	private List<GameObject> team;
 	// Use this for initialization
 	void Start () {
 		//buttons = GameObject.FindGameObjectsWithTag ("Button"); //saves all butatons in an array
-		buttons = Button.FindObjectsOfType(typeof(Button)) as Button[];
 
-		List<GameObject> availableDogs = GameObject.Find ("GameManager").GetComponent<Game_Manager> ().owned; 
+		GameObject btns = GameObject.Find("Buttons");
+		buttons = btns.GetComponentsInChildren<Button> ();
 
+		availableDogs = GameObject.Find ("GameManager").GetComponent<Game_Manager> ().owned; 
+
+		//--Makes the screen only scrollable when there are more dogs than screen space
+		if (availableDogs.Count <= 16) {
+			GameObject.Find ("Scrollable").GetComponent<ScrollRect> ().enabled = false;
+		} 
+		else {
+			GameObject.Find ("Scrollable").GetComponent<ScrollRect> ().enabled = true;
+		}
+
+		//--sets sprite to button if there is a dog to fill the spot, else disables the button
 		for (int i = 0; i < 28; i++) {
-			if (availableDogs [i] != null) {
-				Debug.Log ("Dog Available");
-				buttons [i].image = ninja;
+			if (availableDogs.Count > i) {
+				//Debug.Log ("Dog Available");
+				buttons [i].image.sprite = availableDogs[i].GetComponent<SpriteRenderer>().sprite;
 			} 
 			else {
-				buttons [i].enabled = false;
+				//Debug.Log ("Button Disabled");
+				buttons [i].image.enabled = false;
+				buttons [i].interactable = false;
 			}
 		}
 
+		//---create a copy of the roster to use for selected state
+		team = GameObject.Find ("GameManager").GetComponent<Game_Manager> ().dogRoster;
+
+		for (int j = 0; j < team.Count; j++) {
+			for (int k = 0; k < availableDogs.Count; k++) {
+				if (availableDogs [k].name == team [0].name) {
+					//make that dog chosen
+					buttons[k].GetComponent<Roster_Button_Script>().SelectDog();
+					team.Remove(team[0]);
+					if (team.Count == 0)
+						break;
+					//break;
+				}
+			}
+		}
 	}
 
 	// Update is called once per frame
@@ -37,6 +67,18 @@ public class Team_Script : MonoBehaviour {
 	}
 
 	public void Back(){
+		//--set the selected dogs to dog roster
+		//empty the roster array
+		GameObject.Find ("GameManager").GetComponent<Game_Manager> ().dogRoster.Clear();
+		Debug.Log (availableDogs.Count);
+		//populate the roster with selected dogs
+		for(int i=0; i < availableDogs.Count; i++){
+			if (buttons [i].GetComponent<Roster_Button_Script> ().chosen) {
+				GameObject.Find ("GameManager").GetComponent<Game_Manager> ().dogRoster.Add (availableDogs[i]);
+			}
+		}
+
+		GameObject.Find ("GameManager").GetComponent<Game_Manager> ().ChangeState ();
 		GameObject.Find ("SceneManager").GetComponent<Scene_Script> ().UnloadScene (3);
 	}
 
@@ -47,4 +89,5 @@ public class Team_Script : MonoBehaviour {
 		//else
 		//find same dog in the roster and remove it
 	}
+
 }
