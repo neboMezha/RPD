@@ -35,7 +35,7 @@ public class Summon_Script : MonoBehaviour {
 
 	public void Back(){
 
-		GameObject.Find ("GameManager").GetComponent<Game_Manager> ().ChangeState ();
+		GameObject.Find ("GameManager").GetComponent<Game_Manager> ().ChangeState ("map");
 		GameObject.Find ("SceneManager").GetComponent<Scene_Script> ().UnloadScene (4);
 	}
 }

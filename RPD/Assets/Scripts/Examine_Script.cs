@@ -25,11 +25,11 @@ public class Examine_Script : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
 	}
+
 	public void Back(){
 
-		GameObject.Find ("SummonManager").GetComponent<Summon_Script>().backB.active = true;
+		GameObject.Find ("SummonManager").GetComponent<Summon_Script>().backB.SetActive(true);
 		//GameObject.Find ("Back").GetComponent<Button> ().enabled = false;
 		//GameObject.Find ("GameManager").GetComponent<Game_Manager> ().ChangeState ();
 		GameObject.Find ("SceneManager").GetComponent<Scene_Script> ().UnloadScene (5);

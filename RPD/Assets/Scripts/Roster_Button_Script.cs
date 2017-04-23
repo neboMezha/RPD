@@ -9,7 +9,6 @@ public class Roster_Button_Script : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		GameObject arb = GameObject.Find ("GameManager");
 	}
 	
 	// Update is called once per frame

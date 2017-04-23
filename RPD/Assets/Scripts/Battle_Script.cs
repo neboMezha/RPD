@@ -98,12 +98,11 @@ public class Battle_Script : MonoBehaviour {
 		}
 
 		if (knockedOut == dogs.Length || catHP <=0) {								// if all KOed, exit battle OR kill cat
-			GameObject.Find ("GameManager").GetComponent<Game_Manager>().battling = false;
 			for (int i = 0; i < dogs.Length; i++) {
 				Destroy (dogs[i]);
 			}
 
-			GameObject.Find ("GameManager").GetComponent<Game_Manager> ().ChangeState ();
+			GameObject.Find ("GameManager").GetComponent<Game_Manager> ().ChangeState ("map");
 			ss.UnloadScene(2);
 		}
 	}

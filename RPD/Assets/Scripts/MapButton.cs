@@ -39,10 +39,15 @@ public class MapButton : MonoBehaviour {
 
 			// TODO: perform focus animation and stuff
 			// make info bubble visible
-			buttonObjectBubble.localPosition.z = -0.3f;
+			//buttonObjectBubble.localPosition.z = -0.3f;
 
 		}
 		if (focused) {	// second tap
+
+			// temporary
+			GameObject.Find ("GameManager").GetComponent<Game_Manager> ().ToBattleTest();
+
+
 			// TO DO: go to cooresponding battle scene
 		}
 	}
