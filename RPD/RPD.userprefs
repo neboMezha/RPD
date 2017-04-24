@@ -1,20 +1,20 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Team_Script.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\MapButton.cs">
     <Files>
       <File FileName="Assets\Scripts\Dog_Script.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\Scene_Script.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Team_Script.cs" Line="56" Column="26" />
-      <File FileName="Assets\Scripts\Battle_Script.cs" Line="100" Column="95" />
+      <File FileName="Assets\Scripts\Team_Script.cs" Line="58" Column="14" />
+      <File FileName="Assets\Scripts\Battle_Script.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\TitleScript.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\MapButton.cs" Line="46" Column="4" />
       <File FileName="Assets\Scripts\Cat.cs" Line="9" Column="48" />
-      <File FileName="Assets\Scripts\Loader.cs" Line="15" Column="48" />
-      <File FileName="Assets\ListLoading\enemylist.txt" Line="22" Column="26" />
-      <File FileName="Assets\Scripts\Summon_Script.cs" Line="38" Column="85" />
-      <File FileName="Assets\Scripts\Roster_Button_Script.cs" Line="11" Column="17" />
-      <File FileName="Assets\Scripts\Game_Manager.cs" Line="159" Column="16" NotebookId="1" />
-      <File FileName="Assets\Scripts\Examine_Script.cs" Line="27" Column="18" NotebookId="1" />
+      <File FileName="Assets\Scripts\Loader.cs" Line="1" Column="1" />
+      <File FileName="Assets\ListLoading\enemylist.txt" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Summon_Script.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Roster_Button_Script.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Game_Manager.cs" Line="100" Column="6" NotebookId="1" />
+      <File FileName="Assets\Scripts\Examine_Script.cs" Line="1" Column="1" NotebookId="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
