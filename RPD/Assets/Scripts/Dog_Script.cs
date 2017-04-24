@@ -13,9 +13,9 @@ public class Dog_Script : MonoBehaviour {
 	public int aggro;
 
 	private int timer2;
-	private Vector3 pos;
+	private Vector3 posRight;
 	private Vector3 posOr;
-	private float mover;
+	private float mover = 0.1f;
 
 	// AUDIO //
 	new AudioSource audio;
@@ -25,10 +25,10 @@ public class Dog_Script : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		pos = transform.position;
+		posRight = new Vector3 (-0.43f, 1.729f, -0.008f);
 		posOr = transform.position;
 		timer2 = 0;
-		mover = 0;
+		mover = 0.1f;
 
 		koed = false;
 		attacking = false;
@@ -67,33 +67,20 @@ public class Dog_Script : MonoBehaviour {
 		//--Attack Animation
 		if (attacking) {
 			//after 14 frames, turn off attacking
-			if (timer2 == 14) {
+			if (this.transform.position.x >= posRight.x) {
+				Debug.Log ("moving");
 				attacking = false;
-				timer2 = 0;
-			}
-			//move forward
-			if (timer2 < 7) {
-				transform.position = new Vector3 (pos.x + mover, pos.y, pos.z);
+			} else {
+				//Debug.Log (mover);
+				this.transform.position = new Vector3 (this.transform.position.x + mover, this.transform.position.y, this.transform.position.z);
 			} 
-			//at midpoint, set the surent position as pos
-			else if (timer2 == 7) {
-				pos = transform.position;
-				mover = 0;
-			} 
-			//move backwards
-			else {
-				transform.position = new Vector3 (pos.x - mover, pos.y, pos.z);
-			}
-
-			mover += 0.1f;
-			timer2++;
-
 		} 
-		//if not attacking, set everything to original pos
 		else {
-			pos = posOr;
-			transform.position = posOr;
+			if (this.transform.position.x > posOr.x)
+				this.transform.position = new Vector3 (this.transform.position.x - mover, this.transform.position.y, this.transform.position.z);
 		}
+	
+
 	}
 
 	public void Attack(){			//IF IN BATTLE

@@ -7,7 +7,7 @@ using System.IO;
 /// Class to load in text files and store lines in a list
 /// </summary>
 public class Loader : MonoBehaviour {
-	List<string> lines;
+	List<string> lines = new List<string>();
 
 	public List<string> Lines {  get { return lines; } }
 

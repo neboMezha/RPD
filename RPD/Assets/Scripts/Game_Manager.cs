@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.IO;
 
 [RequireComponent(typeof(AudioSource))]
 public class Game_Manager : MonoBehaviour {
@@ -27,6 +28,9 @@ public class Game_Manager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		//make the loader instantiated
+		enemyLoader = new Loader();
+
 		audio = GetComponent<AudioSource>();
 
 		// TO DO: Init map buttons
@@ -90,14 +94,15 @@ public class Game_Manager : MonoBehaviour {
 
 
 		// LOAD AND ASSIGN IN ENEMY LIST----------------------------------------------
-		//enemyLoader.readTextFile("/Assets/ListLoading/enemylist.txt");
+
+		enemyLoader.readTextFile(Application.dataPath + "/ListLoading/enemylist.txt");
 		//foreach (Cat c in enemies) {}
-		/*for (int i = 0; i < enemyLoader.Lines.Count; i++) {	// not count-1 right this is same as length?
+		for (int i = 0; i < enemyLoader.Lines.Count; i++) {	// not count-1 right this is same as length?
 			// make new cat if the loader.Lines[i] has with "ID:"
 			if (enemyLoader.Lines[i].Contains("ID:")) {
 
 			}
-		}*/
+		}
 
 	}
 

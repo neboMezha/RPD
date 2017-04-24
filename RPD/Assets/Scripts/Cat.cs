@@ -8,7 +8,7 @@ public class Cat : MonoBehaviour {
 	int HP;					// current HP
 	int attackRange;		// Int: num of units attackable
 	float attackRate;		// Float: wait time for attack
-	GameObject prefab;		// sprite prefab
+	Sprite image;			// sprite prefab
 
 
 
