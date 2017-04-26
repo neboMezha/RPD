@@ -5,6 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof(AudioSource))]
 public class Dog_Script : MonoBehaviour {
 	public bool attacking;
+	public bool takingDamage;
 	public bool koed = false;
 	public bool unlocked = true;
 	public int hp;
@@ -12,8 +13,11 @@ public class Dog_Script : MonoBehaviour {
 	public double coolDown;
 	public int aggro;
 
-	private int timer2;
+	private float timer;
+	private bool able; //dog is able to attack
+
 	private Vector3 posRight;
+	private Vector3 posLeft;
 	private Vector3 posOr;
 	private float mover = 0.1f;
 
@@ -25,13 +29,17 @@ public class Dog_Script : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		able = true;
+		timer = 0;
+
 		posRight = new Vector3 (-0.43f, 1.729f, -0.008f);
+		posLeft = new Vector3 (-1.68f, -0.617f, -0.008f);
 		posOr = transform.position;
-		timer2 = 0;
 		mover = 0.1f;
 
 		koed = false;
 		attacking = false;
+		takingDamage = false;
 		//hp = 10;
 
 		//-------------SETTING UP DOG STATS
@@ -64,11 +72,18 @@ public class Dog_Script : MonoBehaviour {
 	// Update is called once per frame
 	//--GLITCHY
 	void Update () {
+		timer += Time.deltaTime;
+
+		if (timer >= this.coolDown) {
+			timer = 0;
+			able = true;
+			this.GetComponent<SpriteRenderer> ().color = Color.white;
+		}
+
 		//--Attack Animation
 		if (attacking) {
 			//after 14 frames, turn off attacking
 			if (this.transform.position.x >= posRight.x) {
-				Debug.Log ("moving");
 				attacking = false;
 			} else {
 				//Debug.Log (mover);
@@ -79,25 +94,44 @@ public class Dog_Script : MonoBehaviour {
 			if (this.transform.position.x > posOr.x)
 				this.transform.position = new Vector3 (this.transform.position.x - mover, this.transform.position.y, this.transform.position.z);
 		}
+
+		//--Taking Damage Animation
+		if(takingDamage){
+			if (this.transform.position.x <= posLeft.x) {
+				takingDamage = false;
+			} else {
+				//Debug.Log (mover);
+				this.transform.position = new Vector3 (this.transform.position.x - mover, this.transform.position.y, this.transform.position.z);
+			} 
+		}
+		else {
+			if (this.transform.position.x < posOr.x)
+				this.transform.position = new Vector3 (this.transform.position.x + mover, this.transform.position.y, this.transform.position.z);
+		}
 	
 
 	}
 
 	public void Attack(){			//IF IN BATTLE
-		attacking = true;
-		if (this.name == "Saint Bernard") {
-			Battle_Script gms = GameObject.Find ("BattleManager").GetComponent<Battle_Script> ();
-			int rand = Random.Range (0, gms.dogs.Length);
-			//gms.dogRoster [0].GetComponent<Dog_Script> ().Heal ();
-			gms.dogs [rand].GetComponent<Dog_Script>().hp += 1;
-			Debug.Log ("Healed " + gms.dogs [rand].name);
-
+		if (able) {
+			attacking = true;
+			able = false;
 		}
-		//attacking = true;
-		//Debug.Log (this.name + " attacked"); //uses the Object's name in the heirarchy as the name
-		else {
-			GameObject.Find ("BattleManager").GetComponent<Battle_Script> ().catHP -= atk;
-			Debug.Log ("Cat HP: " + GameObject.Find ("BattleManager").GetComponent<Battle_Script> ().catHP);
+		if(!able) {
+			this.GetComponent<SpriteRenderer> ().color = Color.gray;
+		}
+		if (attacking) {
+			if (this.name == "Saint Bernard") {
+				Battle_Script gms = GameObject.Find ("BattleManager").GetComponent<Battle_Script> ();
+				int rand = Random.Range (0, gms.dogs.Length);
+				//gms.dogRoster [0].GetComponent<Dog_Script> ().Heal ();
+				gms.dogs [rand].GetComponent<Dog_Script> ().hp += 1;
+				Debug.Log ("Healed " + gms.dogs [rand].name);
+
+			} else {
+				GameObject.Find ("BattleManager").GetComponent<Battle_Script> ().catHP -= atk;
+				Debug.Log ("Cat HP: " + GameObject.Find ("BattleManager").GetComponent<Battle_Script> ().catHP);
+			}
 		}
 	}
 
@@ -106,6 +140,9 @@ public class Dog_Script : MonoBehaviour {
 	}
 
 	public void TakeDamage(){
+		takingDamage = true;
+
+		//----
 		hp -= 1;
 
 		Debug.Log (this.name + "'s HP = " + hp); //uses the Object's name in the heirarchy as the name
