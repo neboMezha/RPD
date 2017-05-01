@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class Battle_Script : MonoBehaviour {
 	//public GameObject d1;
-	public Scene_Script ss;
+	Scene_Script ss;
 	public Button[] buttons;
 	public int catHP = 15;
 
@@ -13,6 +13,8 @@ public class Battle_Script : MonoBehaviour {
 	private float timer;
 	private float timeHolder;
 	public int knockedOut;
+
+	public GameObject enemyPlaceholderObj;
 
 	// AUDIO //
 	new AudioSource audio;
@@ -102,9 +104,19 @@ public class Battle_Script : MonoBehaviour {
 				Destroy (dogs[i]);
 			}
 
-			GameObject.Find ("GameManager").GetComponent<Game_Manager> ().ChangeState ("map");
-			ss.UnloadScene(2);
+			//GameObject.Find ("GameManager").GetComponent<Game_Manager> ().ChangeState ("map");
+			//ss.UnloadScene(2);
+			GameObject.Find ("GameManager").GetComponent<Game_Manager> ().ToMapScene(2);
 		}
+	}
+
+
+
+	/// <summary>
+	/// Loads the specified battle--FOR NOW hardcoded single battle
+	/// </summary>
+	void LoadBattle(){
+
 	}
 
 }
