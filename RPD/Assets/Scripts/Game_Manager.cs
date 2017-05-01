@@ -9,10 +9,15 @@ public class Game_Manager : MonoBehaviour {
 	public GameObject[] allDogs = new GameObject[4];
 	public List<GameObject> owned;
 	public List<GameObject> dogRoster;
+	public List<Cat> cats;
+	public Sprite[] allCats = new Sprite[4];
 
 	Loader enemyLoader;
 
-	enum GameState { map, battle, teamSelect };		// used to control input and stuff and what state the game should be in, regardless of overlapping scenes
+	public GameObject canvas;	// store the canvas object to be set active and inactive
+
+
+	enum GameState { map, battle, teamSelect, summon };		// used to control input and stuff and what state the game should be in, regardless of overlapping scenes
 	GameState currentState;
 
 	// AUDIO //
@@ -28,8 +33,8 @@ public class Game_Manager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		//make the loader instantiated
 		enemyLoader = new Loader();
+		cats = new List<Cat>();
 
 		audio = GetComponent<AudioSource>();
 
@@ -48,10 +53,6 @@ public class Game_Manager : MonoBehaviour {
 		owned.Add (allDogs [3]);
 		owned.Add (allDogs [0]);
 
-		owned.Add (allDogs [1]);
-		owned.Add (allDogs [2]);
-		owned.Add (allDogs [2]);
-		owned.Add (allDogs [1]);
 		/*
 		//set all dogs 28 times
 		for(int j=0; j<28; j++){
@@ -94,13 +95,28 @@ public class Game_Manager : MonoBehaviour {
 
 
 		// LOAD AND ASSIGN IN ENEMY LIST----------------------------------------------
-
+		//ISSUE --> creates and instantiated the cats into the scene (the cat = new GameObject part)
+		//after adding the cat to the list, the gameobject cat is also altered when altering cats[index]
 		enemyLoader.readTextFile(Application.dataPath + "/ListLoading/enemylist.txt");
 		//foreach (Cat c in enemies) {}
 		for (int i = 0; i < enemyLoader.Lines.Count; i++) {	// not count-1 right this is same as length?
 			// make new cat if the loader.Lines[i] has with "ID:"
-			if (enemyLoader.Lines[i].Contains("ID:")) {
+			if (enemyLoader.Lines [i].Contains ("Id:")) {
+				Cat cat;
+				//to be used to assign sprite from AllCats
+				int num = int.Parse (enemyLoader.Lines [i].Substring (enemyLoader.Lines [i].Length - 1));
 
+				//save line info as propper types
+				string name = enemyLoader.Lines [i + 1];
+				int hp = int.Parse (enemyLoader.Lines [i + 2]);
+				int atkRange = int.Parse (enemyLoader.Lines [i + 3]);
+				float atkRate = float.Parse (enemyLoader.Lines [i + 4]);
+				string img = enemyLoader.Lines [i + 1];
+				Sprite sprit = allCats [num];
+
+				cat = new Cat (name, hp, atkRange, atkRate, sprit);
+
+				cats.Add (cat);
 			}
 		}
 
@@ -130,30 +146,17 @@ public class Game_Manager : MonoBehaviour {
 
 
 	/// <summary>
-	/// Changes the state, to be used from outside classes when adding/changing scenes
+	/// SCENE CHANGE FUNCTIONS: Public, handles everything that happens when the scene changes
+	/// USE THESE TO CHANGE SCENES ONLY!!!
 	/// </summary>
-	/// <param name="stateName">State name: map, battle, teamSelect</param>
-	public void ChangeState(string stateName) {
-		if (stateName == "map") {
-			currentState = GameState.map;
-		}
-		else if (stateName == "battle") {
-			currentState = GameState.battle;
-		}
-		else if (stateName == "teamSelect") {
-			currentState = GameState.teamSelect;
-		}
-	}
-
-	// Temporary?? methods to add scenes, used with buttons
-	void ToTeamScene() {
-		audio.Stop();
+	public void ToTeamScene() {
 		audio.PlayOneShot (selectionSound, 1.0f);
 		ss.AddScene (3);
-		currentState = GameState.teamSelect;
+		ChangeState ("teamSelect");
+		canvas.SetActive (false);
 	}
 
-	void ToSettingsScene() {
+	public void ToSettingsScene() {
 
 	}
 
@@ -164,14 +167,48 @@ public class Game_Manager : MonoBehaviour {
 		audio.Stop();
 		audio.PlayOneShot (selectionSound, 1.0f);			
 		ss.AddScene (2);
-		currentState = GameState.battle;
+		ChangeState ("battle");
+		canvas.SetActive (false);
+	}
+
+	/// <summary>
+	/// Tos the map scene.
+	/// </summary>
+	/// <param name="currentScene">Current scene from which this is being called (so it can be closed).</param>
+	public void ToMapScene(int currentScene){
+		audio.Play();
+		ss.UnloadScene(currentScene);	// unload current scene since map is always in bg
+		ChangeState ("map");
+		canvas.SetActive (true);
+	}
+
+	public void ToSummonScene() {
+		audio.PlayOneShot (selectionSound, 1.0f);
+		ss.AddScene (4);
+		ChangeState ("summon");
+		canvas.SetActive (false);
 	}
 
 
-	/// <summary>
-	/// Loads the specified battle
-	/// </summary>
-	void LoadBattle(){
 
+
+	/// <summary>
+	/// Changes the state, to be used from outside classes when adding/changing scenes.
+	/// Inner helper function.
+	/// </summary>
+	/// <param name="stateName">State name: "map", "battle", "teamSelect"</param>
+	private void ChangeState(string stateName) {
+		if (stateName == "map") {
+			currentState = GameState.map;
+		}
+		else if (stateName == "battle") {
+			currentState = GameState.battle;
+		}
+		else if (stateName == "teamSelect") {
+			currentState = GameState.teamSelect;
+		}
+		else if (stateName == "summon") {
+			currentState = GameState.summon;
+		}
 	}
 }

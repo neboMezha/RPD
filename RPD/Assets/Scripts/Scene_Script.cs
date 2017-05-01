@@ -10,7 +10,6 @@ public class Scene_Script : MonoBehaviour {
 	public void ChangeScene (int targetSceneID) {
 		Debug.Log("ChangeScene called: #" + targetSceneID);
 		SceneManager.LoadScene(targetSceneID, LoadSceneMode.Single);
-
 	}
 
 	public void AddScene (int targetSceneID) {

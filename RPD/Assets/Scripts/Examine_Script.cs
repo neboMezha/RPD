@@ -8,7 +8,8 @@ public class Examine_Script : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		//disable the background Back Button form the Summon Page
-		GameObject.Find ("SummonManager").GetComponent<Summon_Script>().backB.active = false;
+		GameObject.Find ("SummonManager").GetComponent<Summon_Script>().backB.SetActive(false);
+		GameObject.Find ("SummonManager").GetComponent<Summon_Script>().summonB.SetActive(false);
 
 
 		int num = GameObject.Find ("GameManager").GetComponent<Game_Manager> ().owned.Count-1;
@@ -30,6 +31,7 @@ public class Examine_Script : MonoBehaviour {
 	public void Back(){
 
 		GameObject.Find ("SummonManager").GetComponent<Summon_Script>().backB.SetActive(true);
+		GameObject.Find ("SummonManager").GetComponent<Summon_Script>().summonB.SetActive(true);
 		//GameObject.Find ("Back").GetComponent<Button> ().enabled = false;
 		//GameObject.Find ("GameManager").GetComponent<Game_Manager> ().ChangeState ();
 		GameObject.Find ("SceneManager").GetComponent<Scene_Script> ().UnloadScene (5);

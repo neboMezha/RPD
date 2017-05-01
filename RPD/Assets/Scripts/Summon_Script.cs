@@ -6,6 +6,7 @@ public class Summon_Script : MonoBehaviour {
 
 	public Scene_Script ss;
 	public GameObject backB;
+	public GameObject summonB;
 	// Use this for initialization
 	void Start () {
 		ss = GameObject.Find ("SceneManager").GetComponent<Scene_Script>();
@@ -35,7 +36,8 @@ public class Summon_Script : MonoBehaviour {
 
 	public void Back(){
 
-		GameObject.Find ("GameManager").GetComponent<Game_Manager> ().ChangeState ("map");
-		GameObject.Find ("SceneManager").GetComponent<Scene_Script> ().UnloadScene (4);
+		//GameObject.Find ("GameManager").GetComponent<Game_Manager> ().ChangeState ("map");
+		//GameObject.Find ("SceneManager").GetComponent<Scene_Script> ().UnloadScene (4);
+		GameObject.Find ("GameManager").GetComponent<Game_Manager> ().ToMapScene(4);
 	}
 }

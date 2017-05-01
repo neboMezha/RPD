@@ -14,9 +14,12 @@ public class Team_Script : MonoBehaviour {
 	private List<GameObject> availableDogs;
 
 	private List<GameObject> team;
+	private Scene_Script ss;
+
 	// Use this for initialization
 	void Start () {
 		//buttons = GameObject.FindGameObjectsWithTag ("Button"); //saves all butatons in an array
+		ss = GameObject.Find ("SceneManager").GetComponent<Scene_Script> ();
 
 		GameObject btns = GameObject.Find("Buttons");
 		buttons = btns.GetComponentsInChildren<Button> ();
@@ -78,8 +81,13 @@ public class Team_Script : MonoBehaviour {
 			}
 		}
 
-		GameObject.Find ("GameManager").GetComponent<Game_Manager> ().ChangeState ("map");
-		GameObject.Find ("SceneManager").GetComponent<Scene_Script> ().UnloadScene (3);
+		// CHANGE THIS TO ToMapScene() in GameManager
+		GameObject.Find ("GameManager").GetComponent<Game_Manager> ().ToMapScene(3);
+	}
+
+	public void ToSummon() {
+		GameObject.Find ("GameManager").GetComponent<Game_Manager> ().ToSummonScene();
+		ss.UnloadScene (3);
 	}
 
 	//on click
