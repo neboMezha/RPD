@@ -101,26 +101,32 @@ public class Game_Manager : MonoBehaviour {
 		//foreach (Cat c in enemies) {}
 		for (int i = 0; i < enemyLoader.Lines.Count; i++) {	// not count-1 right this is same as length?
 			// make new cat if the loader.Lines[i] has with "ID:"
-			if (enemyLoader.Lines [i].Contains ("Id:")) {
+			if (enemyLoader.Lines[i].Contains("Id:")) {
 				Cat cat;
 				//to be used to assign sprite from AllCats
-				int num = int.Parse (enemyLoader.Lines [i].Substring (enemyLoader.Lines [i].Length - 1));
+				int num = int.Parse(enemyLoader.Lines [i].Substring (enemyLoader.Lines [i].Length - 1));
 
 				//save line info as propper types
 				string name = enemyLoader.Lines [i + 1];
-				int hp = int.Parse (enemyLoader.Lines [i + 2]);
-				int atkRange = int.Parse (enemyLoader.Lines [i + 3]);
-				float atkRate = float.Parse (enemyLoader.Lines [i + 4]);
+				int hp =  int.Parse(enemyLoader.Lines [i + 2]);
+				int atkRange = int.Parse(enemyLoader.Lines [i + 3]);
+				float atkRate = float.Parse(enemyLoader.Lines [i + 4]);
 				string img = enemyLoader.Lines [i + 1];
-				Sprite sprit = allCats [num];
+				Sprite sprit = allCats[num];
 
 				cat = new Cat (name, hp, atkRange, atkRate, sprit);
+
 
 				cats.Add (cat);
 			}
 		}
-
+		Debug.Log(cats [0].CatName);
+		Debug.Log(cats [1].CatName);
+		Debug.Log(cats [2].CatName);
+		Debug.Log(cats [3].Image);
+		//Instantiate (cats [0], Vector3.zero, Quaternion.identity);
 	}
+
 
 	// Update is called once per frame
 	void Update () {

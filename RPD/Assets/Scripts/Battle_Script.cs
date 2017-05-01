@@ -7,7 +7,6 @@ public class Battle_Script : MonoBehaviour {
 	//public GameObject d1;
 	Scene_Script ss;
 	public Button[] buttons;
-	public int catHP = 15;
 
 	public GameObject[] dogs;		//need to create DogRoster Array in Main/Map scene to take in the selected dogs
 	private float timer;
@@ -21,9 +20,36 @@ public class Battle_Script : MonoBehaviour {
 	public AudioClip catDamageSound;
 	public AudioClip catAttackSound;
 
+	//temporarily hardcoded cats
+	public GameObject cat1;
+	public GameObject cat2;
+	public GameObject cat3;
+	public int catHP = 25;
 
 	// Use this for initialization
 	void Start () {
+		//cat creation and loading
+		Cat c1 = GameObject.Find("GameManager").GetComponent<Game_Manager> ().cats [0];
+		cat1.AddComponent<Cat>();
+
+		cat1.GetComponent<SpriteRenderer>().sprite = c1.Image;
+		cat1.transform.localScale /= 2f;
+
+
+		Cat c2 = GameObject.Find("GameManager").GetComponent<Game_Manager> ().cats [1];
+		cat2.AddComponent<Cat>();
+
+		cat2.GetComponent<SpriteRenderer>().sprite = c2.Image;
+		cat2.transform.localScale /= 2f;
+
+		Cat c3 = GameObject.Find("GameManager").GetComponent<Game_Manager> ().cats [2];
+		cat3.AddComponent<Cat>();
+
+		cat3.GetComponent<SpriteRenderer>().sprite = c3.Image;
+		cat3.transform.localScale /= 2f;
+
+
+
 		// Initialize Audio Source Component
 		audio = GetComponent<AudioSource>();
 

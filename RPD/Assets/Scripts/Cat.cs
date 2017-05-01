@@ -44,4 +44,7 @@ public class Cat : MonoBehaviour {
 	public float AttackRate {
 		get { return attackRate; }
 	}
+	public Sprite Image {
+		get { return image; }
+	}
 }
