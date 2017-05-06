@@ -7,9 +7,11 @@ public class Battle_Script : MonoBehaviour {
 	//public GameObject d1;
 	Scene_Script ss;
 	public Button[] buttons;
+	public List<Button> catSelectors;
 
 	public GameObject[] dogs;		//need to create DogRoster Array in Main/Map scene to take in the selected dogs
 	private float timer;
+	private float[] timers;
 	private float timeHolder;
 	public int knockedOut;
 
@@ -21,39 +23,65 @@ public class Battle_Script : MonoBehaviour {
 	public AudioClip catAttackSound;
 
 	//temporarily hardcoded cats
-	public GameObject cat1;
-	public GameObject cat2;
-	public GameObject cat3;
+	public List<GameObject> cats;
+	private int targetIndex;
 	public int catHP = 25;
+	private int catCount;
+	private Color temp = new Color (0, 0, 0, 0); 	//NECESSARY TO MAKE SELECTOR ICON INVISIBLE
+	private int catsInLvl;
 
 	// Use this for initialization
 	void Start () {
+		
+		//disables all but one target
+		for (int k = 0; k < catSelectors.Count; k++) {
+			catSelectors [k].onClick.AddListener (ChangeTargets);
+			if (k > 0) {
+				catSelectors [k].GetComponent<Image> ().color = temp;
+			}
+		}
+
+		catCount = 0;
+		targetIndex = 0;
 		//cat creation and loading
-		Cat c1 = GameObject.Find("GameManager").GetComponent<Game_Manager> ().cats [0];
-		cat1.AddComponent<Cat>();
+		//pulls in the battle ID form the Game manager
+		int battleID = GameObject.Find ("GameManager").GetComponent<Game_Manager> ().battleID;
 
-		cat1.GetComponent<SpriteRenderer>().sprite = c1.Image;
-		cat1.transform.localScale /= 2f;
+		//sets the IDs of the Cats for this battle localy
+		List<int> catIDs = GameObject.Find ("GameManager").GetComponent<Game_Manager> ().battles [battleID];
+
+		//go through every cat that has an ID provided, add the correlating Cat class to the gameobjects
+		for (int i = 0; i < catIDs.Count; i++) {	
+			Cat c1 =GameObject.Find ("GameManager").GetComponent<Game_Manager> ().cats [catIDs[i]];
+			cats [i].AddComponent<Cat> ();
 
 
-		Cat c2 = GameObject.Find("GameManager").GetComponent<Game_Manager> ().cats [1];
-		cat2.AddComponent<Cat>();
+			cats [i].GetComponent<Cat> ().CatName = c1.CatName;
+			cats [i].GetComponent<Cat> ().AttackRate = c1.AttackRate;
+			cats [i].GetComponent<Cat> ().MaxHp = c1.MaxHp;
+			cats [i].GetComponent<Cat> ().Hp = c1.MaxHp;
+			cats [i].GetComponent<SpriteRenderer> ().sprite = c1.Image;
+			cats [i].transform.localScale /= 2f;
+			catCount++;
+		}
 
-		cat2.GetComponent<SpriteRenderer>().sprite = c2.Image;
-		cat2.transform.localScale /= 2f;
-
-		Cat c3 = GameObject.Find("GameManager").GetComponent<Game_Manager> ().cats [2];
-		cat3.AddComponent<Cat>();
-
-		cat3.GetComponent<SpriteRenderer>().sprite = c3.Image;
-		cat3.transform.localScale /= 2f;
-
+		catsInLvl = catIDs.Count-1;
+		timers = new float[catsInLvl+1];
+		for (int a = 0; a < timers.Length; a++) {
+			timers [a] = 0;
+		}
+		//disable other cat slots in the scene
+		for (int j = catIDs.Count; j < cats.Count; j++) {
+			cats[j].SetActive(false);
+			catSelectors [j].enabled = false;
+		}
 
 
 		// Initialize Audio Source Component
 		audio = GetComponent<AudioSource>();
 
-		GameObject.Find ("Canvas").GetComponent<CanvasGroup> ().alpha = 0f;
+		//GameObject.Find ("Canvas").GetComponent<CanvasGroup> ().alpha = 0f;
+
 
 		buttons = new Button[14];
 
@@ -67,7 +95,6 @@ public class Battle_Script : MonoBehaviour {
 		dogs = new GameObject[size];
 		List<GameObject> roster = GameObject.Find ("GameManager").GetComponent<Game_Manager>().dogRoster;
 
-		Debug.Log (GameObject.Find ("GameManager").GetComponent<Game_Manager>().dogRoster[1]);
 		//----instantiates all the dogs in the roster
 		for (int i = 0; i < roster.Count; i++) {
 			buttons [i].enabled = true;
@@ -78,41 +105,51 @@ public class Battle_Script : MonoBehaviour {
 
 		}
 		ss = GameObject.Find ("SceneManager").GetComponent<Scene_Script>();
+
+		catHP = cats[targetIndex].GetComponent<Cat> ().MaxHp;
+
+		//--NOTE
+		//should create the buttons with a "selected" sprite to show which cat is the target
+
 	}
 
 	// Update is called once per frame
 	void Update () {
+		cats [targetIndex].GetComponent<Cat> ().Hp = catHP;
 
-		timer += Time.deltaTime; 		//time for Cat to attack
+		for(int n=0; n < timers.Length; n++){
+			timers[n] += Time.deltaTime; 		//time for Cat to attack
+		}
 		//----Cat Attack
-		if (timer >= 3.0f) {
-			timer = 0;
-			int rand = Random.Range(0,30);
+		for (int m = 0; m <= catsInLvl; m++) {
+			if (timers[m] >= cats [m].GetComponent<Cat> ().AttackRate && cats[m].activeSelf) {
+				timers[m] = 0;
+				int rand = Random.Range (0, 30);
 
-			int agr = 0;
-			int target = 0;
-			if (rand >= 10) {
-				for (int j = 0; j < dogs.Length; j++) {
-					if (dogs [j].GetComponent<Dog_Script> ().koed == false) {
-						if (dogs [j].GetComponent<Dog_Script> ().aggro >= agr) { 	//if next dog has higher aggro, make his target
-							agr = dogs [j].GetComponent<Dog_Script> ().aggro;
-							target = j;
+				int agr = 0;
+				int target = 0;
+				if (rand >= 10) {
+					for (int j = 0; j < dogs.Length; j++) {
+						if (dogs [j].GetComponent<Dog_Script> ().koed == false) {
+							if (dogs [j].GetComponent<Dog_Script> ().aggro >= agr) { 	//if next dog has higher aggro, make his target
+								agr = dogs [j].GetComponent<Dog_Script> ().aggro;
+								target = j;
+							}
 						}
 					}
-				}
-				Debug.Log ("Chose strongest");
-			} 
-			else {
-				target = Random.Range (0, dogs.Length);
-
-				while (dogs [target].GetComponent<Dog_Script> ().koed) { 	//if the dog is KOed, pick new target
+					//Debug.Log ("Chose strongest");
+				} else {
 					target = Random.Range (0, dogs.Length);
+
+					while (dogs [target].GetComponent<Dog_Script> ().koed) { 	//if the dog is KOed, pick new target //CAN CAUSE A CRASH IN FIRST LEVEL (all enemies go for the highest aggro seems to kill the game)
+						target = Random.Range (0, dogs.Length);
+					}
+
+					//Debug.Log ("Chose random");
 				}
-
-				Debug.Log ("Chose random");
+				//Debug.Log (cats [m].GetComponent<Cat> ().CatName + " attacked");
+				dogs [target].GetComponent<Dog_Script> ().TakeDamage (); 	//dog takes damage
 			}
-
-			dogs [target].GetComponent<Dog_Script> ().TakeDamage (); 	//dog takes damage
 		}
 
 		//-----Checking for KOs
@@ -125,19 +162,77 @@ public class Battle_Script : MonoBehaviour {
 			}
 		}
 
-		if (knockedOut == dogs.Length || catHP <=0) {								// if all KOed, exit battle OR kill cat
+		//Change Cat targets when one dies
+		if (catHP <= 0 && catCount > 0) {
+			catSelectors [targetIndex].GetComponent<Image> ().color = temp; //makes current selector invisible
+			cats[targetIndex].SetActive (false);	//disables that cat
+			catSelectors [targetIndex].enabled = false;
+
+
+			for (int j = 0; j < catsInLvl; j++) {
+				if (!cats [targetIndex].activeSelf) {
+					targetIndex++;
+					if (targetIndex > catsInLvl) {
+						targetIndex = 0;
+					}
+				}
+				else
+					break;
+			}
+
+			catHP = cats[targetIndex].GetComponent<Cat> ().Hp;
+			catCount--;
+			Debug.Log (catCount);
+			catSelectors [targetIndex].GetComponent<Image> ().color = Color.white;
+		}
+
+		if (knockedOut >= dogs.Length || catCount <=0) {								// if all KOed, exit battle OR kill cat
 			for (int i = 0; i < dogs.Length; i++) {
 				Destroy (dogs[i]);
 			}
-
 			//GameObject.Find ("GameManager").GetComponent<Game_Manager> ().ChangeState ("map");
 			//ss.UnloadScene(2);
 			GameObject.Find ("GameManager").GetComponent<Game_Manager> ().ToMapScene(2);
 		}
+
+		catHP = cats [targetIndex].GetComponent<Cat> ().Hp;
 	}
 
 
+	public void ChangeTargets(){
+		Vector2 mousept = Camera.main.ScreenToWorldPoint (Input.mousePosition);
 
+		//turn off the selector of current target
+		catSelectors [targetIndex].GetComponent<Image> ().color = temp;
+
+
+		//shift the selector
+		if (mousept.x >= -0.2f && mousept.x <= 0.9f) {
+			targetIndex = 0;
+		}
+		else if (mousept.x >= 0.8f && mousept.x <= 1.9f) {
+			if (mousept.y > 0) {
+				targetIndex = 1;
+
+			} else {
+				targetIndex = 2;
+			}
+		}
+		else if (mousept.x >= 1.8f && mousept.x <= 2.9f) {
+			if (mousept.y > 1) {
+				targetIndex = 5;
+			} else if (mousept.y < -1) {
+				targetIndex = 3;
+			} else {
+				targetIndex = 4;
+			}
+		}
+		catSelectors [targetIndex].GetComponent<Image> ().color = Color.white;
+
+		catHP = cats[targetIndex].GetComponent<Cat> ().Hp;
+		Debug.Log (catHP);
+	}
+		
 	/// <summary>
 	/// Loads the specified battle--FOR NOW hardcoded single battle
 	/// </summary>

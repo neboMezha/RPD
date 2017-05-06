@@ -31,20 +31,26 @@ public class Cat : MonoBehaviour {
 
 	public string CatName {
 		get { return catName; }
+		set{ catName = value;}
 	}
 	public int MaxHp {
 		get { return maxHP; }
+		set{ maxHP = value;}
 	}
 	public int Hp {
 		get { return hp; }
+		set{ hp = value;}
 	}
 	public int AttackRange {
 		get { return attackRange; }
 	}
 	public float AttackRate {
 		get { return attackRate; }
+		set{ attackRate = value;}
 	}
 	public Sprite Image {
 		get { return image; }
 	}
+
+
 }

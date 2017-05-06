@@ -12,7 +12,11 @@ public class Game_Manager : MonoBehaviour {
 	public List<Cat> cats;
 	public Sprite[] allCats = new Sprite[4];
 
+	public Dictionary<int, List<int>> battles;
+	public int battleID;
+
 	Loader enemyLoader;
+	Loader battleLoader;
 
 	public GameObject canvas;	// store the canvas object to be set active and inactive
 
@@ -33,8 +37,10 @@ public class Game_Manager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		battleLoader = new Loader();
 		enemyLoader = new Loader();
 		cats = new List<Cat>();
+		battles = new Dictionary<int, List<int>>();
 
 		audio = GetComponent<AudioSource>();
 
@@ -120,11 +126,35 @@ public class Game_Manager : MonoBehaviour {
 				cats.Add (cat);
 			}
 		}
-		Debug.Log(cats [0].CatName);
+		Debug.Log(cats [0].Hp);
 		Debug.Log(cats [1].CatName);
 		Debug.Log(cats [2].CatName);
 		Debug.Log(cats [3].Image);
 		//Instantiate (cats [0], Vector3.zero, Quaternion.identity);
+
+		//loading in battles
+		battleLoader.readTextFile(Application.dataPath + "/ListLoading/battlelist.txt");
+
+		for (int i = 0; i < battleLoader.Lines.Count; i++) {	// not count-1 right this is same as length?
+			// make new cat if the loader.Lines[i] has with "ID:"
+			if (battleLoader.Lines[i].Contains("Id:")) {
+				//to be used to assign sprite from AllCats
+				int num = int.Parse(battleLoader.Lines [i].Substring (battleLoader.Lines [i].Length - 1));
+
+				//save line info as propper types
+				string content = battleLoader.Lines [i + 1];
+				string[] tempArr = content.Split (' ');
+
+				List<int> battle = new List<int>();
+
+				for (int j = 0; j < tempArr.Length; j++) {
+					//Debug.Log (tempArr [j]);
+					battle.Add (int.Parse(tempArr[j]));
+				}
+
+				battles.Add (num, battle);
+			}
+		}
 	}
 
 
