@@ -22,4 +22,11 @@ public class Scene_Script : MonoBehaviour {
 		SceneManager.UnloadSceneAsync(targetSceneID);
 
 	}
+
+
+
+	// generic back to map script from any scene
+	public void BackToMap(int sceneToUnload){
+		GameObject.Find ("GameManager").GetComponent<Game_Manager> ().ToMapScene(sceneToUnload);
+	}
 }

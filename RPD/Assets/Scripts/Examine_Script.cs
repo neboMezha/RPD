@@ -23,7 +23,7 @@ public class Examine_Script : MonoBehaviour {
 		GameObject.Find ("dmg").GetComponent<Text> ().text = newDog.GetComponent<Dog_Script>().atk.ToString();
 		GameObject.Find ("aggro").GetComponent<Text> ().text = newDog.GetComponent<Dog_Script>().aggro.ToString();
 	}
-	
+
 	// Update is called once per frame
 	void Update () {
 	}

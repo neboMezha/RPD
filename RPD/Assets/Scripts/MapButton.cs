@@ -75,6 +75,7 @@ public class MapButton : MonoBehaviour {
 			// temporary
 			GameObject.Find ("GameManager").GetComponent<Game_Manager> ().ToBattleTest();
 
+
 			Debug.Log ("Load battle target ID: " + target);
 			GameObject.Find ("GameManager").GetComponent<Game_Manager> ().battleID = target;
 

@@ -21,7 +21,7 @@ public class Game_Manager : MonoBehaviour {
 	public GameObject canvas;	// store the canvas object to be set active and inactive
 
 
-	enum GameState { map, battle, teamSelect, summon };		// used to control input and stuff and what state the game should be in, regardless of overlapping scenes
+	enum GameState { map, battle, teamSelect, summon, help, win, lose };		// used to control input and stuff and what state the game should be in, regardless of overlapping scenes
 	GameState currentState;
 
 	// AUDIO //
@@ -59,32 +59,8 @@ public class Game_Manager : MonoBehaviour {
 		owned.Add (allDogs [3]);
 		owned.Add (allDogs [0]);
 
-		/*
-		//set all dogs 28 times
-		for(int j=0; j<28; j++){
-			owned.Add (allDogs [Random.Range(0,4)]);
-		}
-		*/
-
 		ss = GameObject.Find ("SceneManager").GetComponent<Scene_Script>();
 
-		/*
-		ownedDogs = new GameObject[6];
-
-		battling = false;
-
-		if(ownedDogs.Length < 14)
-			dogRoster = new GameObject[ownedDogs.Length];
-		else
-			dogRoster = new GameObject[14];
-
-		//--Sets length of roster
-		if(owned.Count < 14)
-			dogRoster = new GameObject[owned.Count];
-		else
-			dogRoster = new GameObject[14];
-
-		*/
 
 		//--TEMPORARY
 		//--Assign dogs to roster slots
@@ -107,32 +83,26 @@ public class Game_Manager : MonoBehaviour {
 		//foreach (Cat c in enemies) {}
 		for (int i = 0; i < enemyLoader.Lines.Count; i++) {	// not count-1 right this is same as length?
 			// make new cat if the loader.Lines[i] has with "ID:"
-			if (enemyLoader.Lines[i].Contains("Id:")) {
+			if (enemyLoader.Lines [i].Contains ("Id:")) {
 				Cat cat;
 				//to be used to assign sprite from AllCats
-				int num = int.Parse(enemyLoader.Lines [i].Substring (enemyLoader.Lines [i].Length - 1));
+				int num = int.Parse (enemyLoader.Lines [i].Substring (enemyLoader.Lines [i].Length - 1));
 
 				//save line info as propper types
 				string name = enemyLoader.Lines [i + 1];
-				int hp =  int.Parse(enemyLoader.Lines [i + 2]);
-				int atkRange = int.Parse(enemyLoader.Lines [i + 3]);
-				float atkRate = float.Parse(enemyLoader.Lines [i + 4]);
+				int hp = int.Parse (enemyLoader.Lines [i + 2]);
+				int atkRange = int.Parse (enemyLoader.Lines [i + 3]);
+				float atkRate = float.Parse (enemyLoader.Lines [i + 4]);
 				string img = enemyLoader.Lines [i + 1];
-				Sprite sprit = allCats[num];
+				Sprite sprit = allCats [num];
 
 				cat = new Cat (name, hp, atkRange, atkRate, sprit);
-
 
 				cats.Add (cat);
 			}
 		}
-		Debug.Log(cats [0].Hp);
-		Debug.Log(cats [1].CatName);
-		Debug.Log(cats [2].CatName);
-		Debug.Log(cats [3].Image);
-		//Instantiate (cats [0], Vector3.zero, Quaternion.identity);
 
-		//loading in battles
+		// Battle loader
 		battleLoader.readTextFile(Application.dataPath + "/ListLoading/battlelist.txt");
 
 		for (int i = 0; i < battleLoader.Lines.Count; i++) {	// not count-1 right this is same as length?
@@ -155,8 +125,8 @@ public class Game_Manager : MonoBehaviour {
 				battles.Add (num, battle);
 			}
 		}
-	}
 
+	}
 
 	// Update is called once per frame
 	void Update () {
@@ -180,6 +150,7 @@ public class Game_Manager : MonoBehaviour {
 		}
 	}
 
+	// Scene Change Functions-----------------------------------------------------------------------------------------------
 
 	/// <summary>
 	/// SCENE CHANGE FUNCTIONS: Public, handles everything that happens when the scene changes
@@ -193,7 +164,6 @@ public class Game_Manager : MonoBehaviour {
 	}
 
 	public void ToSettingsScene() {
-
 	}
 
 	/// <summary>
@@ -225,6 +195,28 @@ public class Game_Manager : MonoBehaviour {
 		canvas.SetActive (false);
 	}
 
+	public void ToHelpScene() {
+		audio.PlayOneShot (selectionSound, 1.0f);
+		ss.AddScene (4);
+		ChangeState ("help");
+		canvas.SetActive (false);
+	}
+
+	/// <summary>
+	/// To the Win or Lose scene depending on value.
+	/// Only to be accessed from Battle Scene!!!
+	/// </summary>
+	/// <param name="value">0 - Lose. 1 - win.</param>
+	void ToWinLose(int value) {
+		// TO DO: play win or lose noise
+		ss.AddScene(7);
+		if (value == 0) {
+			
+		} else if (value == 1) {
+			
+		}
+
+	}
 
 
 
@@ -245,6 +237,9 @@ public class Game_Manager : MonoBehaviour {
 		}
 		else if (stateName == "summon") {
 			currentState = GameState.summon;
+		}
+		else if (stateName == "help") {
+			currentState = GameState.help;
 		}
 	}
 }

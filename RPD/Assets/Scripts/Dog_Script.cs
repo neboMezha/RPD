@@ -97,13 +97,7 @@ public class Dog_Script : MonoBehaviour {
 
 		//--Taking Damage Animation
 		if(takingDamage){
-
 			if (this.transform.position.x <= posLeft.x) {
-				if (hp <= 0) {
-					koed = true;
-					GameObject.Find("BattleManager").GetComponent<Battle_Script>().knockedOut++;
-					//Debug.Log (GameObject.Find("BattleManager").GetComponent<Battle_Script>().knockedOut);
-				}
 				takingDamage = false;
 			} else {
 				//Debug.Log (mover);
@@ -132,11 +126,11 @@ public class Dog_Script : MonoBehaviour {
 				int rand = Random.Range (0, gms.dogs.Length);
 				//gms.dogRoster [0].GetComponent<Dog_Script> ().Heal ();
 				gms.dogs [rand].GetComponent<Dog_Script> ().hp += 1;
-				//Debug.Log ("Healed " + gms.dogs [rand].name);
+				Debug.Log ("Healed " + gms.dogs [rand].name);
 
 			} else {
 				GameObject.Find ("BattleManager").GetComponent<Battle_Script> ().catHP -= atk;
-				//Debug.Log ("Cat HP: " + GameObject.Find ("BattleManager").GetComponent<Battle_Script> ().catHP);
+				Debug.Log ("Cat HP: " + GameObject.Find ("BattleManager").GetComponent<Battle_Script> ().catHP);
 			}
 		}
 	}
@@ -148,8 +142,17 @@ public class Dog_Script : MonoBehaviour {
 	public void TakeDamage(){
 		takingDamage = true;
 
+		//----
 		hp -= 1;
 
+		Debug.Log (this.name + "'s HP = " + hp); //uses the Object's name in the heirarchy as the name
 
+		if (hp <= 0) {
+			//Debug.Log (this.name + " died"); //uses the Object's name in the heirarchy as the name
+			koed = true;
+
+			GameObject.Find("BattleManager").GetComponent<Battle_Script>().knockedOut++;
+			Debug.Log (GameObject.Find("BattleManager").GetComponent<Battle_Script>().knockedOut);
+		}
 	}
 }

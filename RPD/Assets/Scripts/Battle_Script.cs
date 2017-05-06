@@ -192,7 +192,16 @@ public class Battle_Script : MonoBehaviour {
 			}
 			//GameObject.Find ("GameManager").GetComponent<Game_Manager> ().ChangeState ("map");
 			//ss.UnloadScene(2);
-			GameObject.Find ("GameManager").GetComponent<Game_Manager> ().ToMapScene(2);
+
+			//////////////////////////////////////////////////////LOSE SCENE  knockedout conditional , WINSTATE catcount conditionsl
+			if (knockedOut >= dogs.Length) {
+				// TO DO: load lose scene
+			} else if (catCount <= 0) {
+					
+			}
+
+
+			//GameObject.Find ("GameManager").GetComponent<Game_Manager> ().ToMapScene(2);
 		}
 
 		catHP = cats [targetIndex].GetComponent<Cat> ().Hp;
@@ -239,5 +248,6 @@ public class Battle_Script : MonoBehaviour {
 	void LoadBattle(){
 
 	}
+		
 
 }

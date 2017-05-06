@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Summon_Script : MonoBehaviour {
 
-	public Scene_Script ss;
+	Scene_Script ss;
 	public GameObject backB;
 	public GameObject summonB;
 	// Use this for initialization
@@ -12,10 +12,10 @@ public class Summon_Script : MonoBehaviour {
 		ss = GameObject.Find ("SceneManager").GetComponent<Scene_Script>();
 		//backB = GameObject.Find ("Back");
 	}
-	
+
 	// Update is called once per frame
 	void Update () {
-		
+
 	}
 
 	public void Summon(){
@@ -35,7 +35,6 @@ public class Summon_Script : MonoBehaviour {
 	}
 
 	public void Back(){
-
 		//GameObject.Find ("GameManager").GetComponent<Game_Manager> ().ChangeState ("map");
 		//GameObject.Find ("SceneManager").GetComponent<Scene_Script> ().UnloadScene (4);
 		GameObject.Find ("GameManager").GetComponent<Game_Manager> ().ToMapScene(4);
