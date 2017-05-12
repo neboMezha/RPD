@@ -11,6 +11,7 @@ public class Team_Script : MonoBehaviour {
 	public Sprite ninja;
 	public Sprite warrior;
 	public Sprite healer;
+	public int numSelected; //used to track how many dogs are selected
 	private List<GameObject> availableDogs;
 
 	private List<GameObject> team;
@@ -18,6 +19,7 @@ public class Team_Script : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		numSelected = 0;
 		//buttons = GameObject.FindGameObjectsWithTag ("Button"); //saves all butatons in an array
 		ss = GameObject.Find ("SceneManager").GetComponent<Scene_Script> ();
 
@@ -50,6 +52,7 @@ public class Team_Script : MonoBehaviour {
 		//---create a copy of the roster to use for selected state
 		team = GameObject.Find ("GameManager").GetComponent<Game_Manager> ().dogRoster;
 
+		//
 		for (int j = 0; j < team.Count; j++) {
 			for (int k = 0; k < availableDogs.Count; k++) {
 				if (availableDogs [k].name == team [0].name) {
@@ -76,7 +79,7 @@ public class Team_Script : MonoBehaviour {
 		Debug.Log (availableDogs.Count);
 		//populate the roster with selected dogs
 		for(int i=0; i < availableDogs.Count; i++){
-			if (buttons [i].GetComponent<Roster_Button_Script> ().chosen) {
+			if (buttons [i].GetComponent<Roster_Button_Script> ().chosen && i < 14) {
 				GameObject.Find ("GameManager").GetComponent<Game_Manager> ().dogRoster.Add (availableDogs[i]);
 			}
 		}
@@ -87,6 +90,12 @@ public class Team_Script : MonoBehaviour {
 
 	public void ToSummon() {
 		GameObject.Find ("GameManager").GetComponent<Game_Manager> ().ToSummonScene();
+		//populate the roster with selected dogs
+		for(int i=0; i < availableDogs.Count; i++){
+			if (buttons [i].GetComponent<Roster_Button_Script> ().chosen && i < 14) {
+				GameObject.Find ("GameManager").GetComponent<Game_Manager> ().dogRoster.Add (availableDogs[i]);
+			}
+		}
 		ss.UnloadScene (3);
 	}
 

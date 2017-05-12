@@ -32,8 +32,10 @@ public class Dog_Script : MonoBehaviour {
 		able = true;
 		timer = 0;
 
-		posRight = new Vector3 (-0.43f, 1.729f, -0.008f);
-		posLeft = new Vector3 (-1.68f, -0.617f, -0.008f);
+		//posRight = new Vector3 (-0.43f, 1.729f, -0.008f);
+		posRight = this.transform.position + new Vector3 (0.7884f, 0, 0);
+		//posLeft = new Vector3 (-1.68f, -0.617f, -0.008f);
+		posLeft = this.transform.position - new Vector3 (0.7884f, 0, 0);
 		posOr = transform.position;
 		mover = 0.1f;
 
@@ -66,6 +68,25 @@ public class Dog_Script : MonoBehaviour {
 			coolDown = 6;
 			aggro = 10;
 			atk = 3;
+		}
+		//MAdE RARES HAVE X2 HP AND ATK
+		else if (this.name == "shiba_R") {
+			hp = 2;
+			coolDown = 1.5;
+			aggro = 1;
+			atk = 4;
+		}
+		else if (this.name == "labra_R") {
+			hp = 2;
+			coolDown = 3;
+			aggro = 3;
+			atk = 8;
+		}
+		else if (this.name == "chihua_R"){
+			hp = 6;
+			coolDown = 6;
+			aggro = 10;
+			atk = 6;
 		}
 	}
 

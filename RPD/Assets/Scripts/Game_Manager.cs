@@ -6,7 +6,7 @@ using System.IO;
 [RequireComponent(typeof(AudioSource))]
 public class Game_Manager : MonoBehaviour {
 	public Scene_Script ss;
-	public GameObject[] allDogs = new GameObject[4];
+	public GameObject[] allDogs = new GameObject[7];
 	public List<GameObject> owned;
 	public List<GameObject> dogRoster;
 	public List<Cat> cats;
@@ -28,6 +28,8 @@ public class Game_Manager : MonoBehaviour {
 	new AudioSource audio;
 	public AudioClip mapBGM;
 	public AudioClip battleBGM;
+	public AudioClip winBGM;
+	public AudioClip loseBGM;
 
 	public AudioClip selectionSound;
 	public AudioClip cancelSound;
@@ -35,8 +37,13 @@ public class Game_Manager : MonoBehaviour {
 	// For mapscene
 	public List<GameObject> mapButtons;
 
+	//currency
+	public int bones;
+
 	// Use this for initialization
 	void Start () {
+		bones = 10;
+
 		battleLoader = new Loader();
 		enemyLoader = new Loader();
 		cats = new List<Cat>();
@@ -54,10 +61,10 @@ public class Game_Manager : MonoBehaviour {
 
 
 		//sets the first
-		owned.Add (allDogs [0]);
-		owned.Add (allDogs [3]);
-		owned.Add (allDogs [3]);
-		owned.Add (allDogs [0]);
+			owned.Add (allDogs [0]);
+			owned.Add (allDogs [3]);
+			owned.Add (allDogs [3]);
+			owned.Add (allDogs [0]);
 
 		ss = GameObject.Find ("SceneManager").GetComponent<Scene_Script>();
 
@@ -202,30 +209,13 @@ public class Game_Manager : MonoBehaviour {
 		canvas.SetActive (false);
 	}
 
-	/// <summary>
-	/// To the Win or Lose scene depending on value.
-	/// Only to be accessed from Battle Scene!!!
-	/// </summary>
-	/// <param name="value">0 - Lose. 1 - win.</param>
-	void ToWinLose(int value) {
-		// TO DO: play win or lose noise
-		ss.AddScene(7);
-		if (value == 0) {
-			
-		} else if (value == 1) {
-			
-		}
-
-	}
-
-
 
 	/// <summary>
 	/// Changes the state, to be used from outside classes when adding/changing scenes.
-	/// Inner helper function.
+	/// Inner helper function. SHOULD BE PRIVATE BUT WE HECKED UP
 	/// </summary>
 	/// <param name="stateName">State name: "map", "battle", "teamSelect"</param>
-	private void ChangeState(string stateName) {
+	public void ChangeState(string stateName) {
 		if (stateName == "map") {
 			currentState = GameState.map;
 		}
@@ -240,6 +230,28 @@ public class Game_Manager : MonoBehaviour {
 		}
 		else if (stateName == "help") {
 			currentState = GameState.help;
+		}
+		else if (stateName == "win") {
+			currentState = GameState.win;	///aaaaaAAAAAAAAAAAAAAAAAA
+		}
+		else if (stateName == "lose") {
+			currentState = GameState.lose;
+		}
+	}
+
+	/// <summary>
+	/// This is a poopy helper function just so Winlose state (and well other ouside classes) can
+	/// "GET" the current gamestate as a int Id since GameState enum only exists in GM....
+	/// this is bAD
+	/// </summary>
+	/// <returns>The state I.</returns>
+	public int GetWinLoseState () {
+		if (currentState == GameState.win) {
+			return 1;
+		} else if (currentState == GameState.lose) {
+			return 2;
+		} else {
+			return 0;		// default for now
 		}
 	}
 }

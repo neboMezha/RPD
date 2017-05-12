@@ -30,6 +30,8 @@ public class Battle_Script : MonoBehaviour {
 	private Color temp = new Color (0, 0, 0, 0); 	//NECESSARY TO MAKE SELECTOR ICON INVISIBLE
 	private int catsInLvl;
 
+	public GameObject[] ui = new GameObject[2];
+
 	// Use this for initialization
 	void Start () {
 		
@@ -141,8 +143,11 @@ public class Battle_Script : MonoBehaviour {
 				} else {
 					target = Random.Range (0, dogs.Length);
 
-					while (dogs [target].GetComponent<Dog_Script> ().koed) { 	//if the dog is KOed, pick new target //CAN CAUSE A CRASH IN FIRST LEVEL (all enemies go for the highest aggro seems to kill the game)
-						target = Random.Range (0, dogs.Length);
+					if (dogs [target].GetComponent<Dog_Script> ().koed) { 	//if the dog is KOed, pick new target //CAN CAUSE A CRASH IN FIRST LEVEL (all enemies go for the highest aggro seems to kill the game)
+						//target = Random.Range (0, dogs.Length);
+						target++;
+						if (target >= dogs.Length)
+							target = 0;
 					}
 
 					//Debug.Log ("Chose random");
@@ -185,7 +190,7 @@ public class Battle_Script : MonoBehaviour {
 			Debug.Log (catCount);
 			catSelectors [targetIndex].GetComponent<Image> ().color = Color.white;
 		}
-
+		// END BATTLE STUFF
 		if (knockedOut >= dogs.Length || catCount <=0) {								// if all KOed, exit battle OR kill cat
 			for (int i = 0; i < dogs.Length; i++) {
 				Destroy (dogs[i]);
@@ -193,14 +198,19 @@ public class Battle_Script : MonoBehaviour {
 			//GameObject.Find ("GameManager").GetComponent<Game_Manager> ().ChangeState ("map");
 			//ss.UnloadScene(2);
 
-			//////////////////////////////////////////////////////LOSE SCENE  knockedout conditional , WINSTATE catcount conditionsl
 			if (knockedOut >= dogs.Length) {
-				// TO DO: load lose scene
+				// change gamestate SCREAMS
+				GameObject.Find ("GameManager").GetComponent<Game_Manager> ().ChangeState("lose");
 			} else if (catCount <= 0) {
-					
+				GameObject.Find ("GameManager").GetComponent<Game_Manager> ().ChangeState("win");
 			}
 
+			ss.AddScene(7);	// kEEPS GETTING CALLED INFINITELY
+			Destroy(ui[0]);
+			Destroy(ui[1]);
+			Destroy(gameObject);	// kill self
 
+			// this makes it go straight back to map, IF COMMENTED OUT DONT WORRY NOT AN ERROR WHEN U PLAY
 			//GameObject.Find ("GameManager").GetComponent<Game_Manager> ().ToMapScene(2);
 		}
 
@@ -248,6 +258,22 @@ public class Battle_Script : MonoBehaviour {
 	void LoadBattle(){
 
 	}
-		
+
+	/// <summary>
+	/// To the Win or Lose scene depending on value.
+	/// Only to be accessed from Battle Scene!!!
+	/// </summary>
+	/// <param name="value">0 - Lose. 1 - win.</param>
+	void ToWinLose(int value) {
+		// TO DO: play win or lose noise
+		ss.AddScene(7);
+		if (value == 0) {
+
+		} else if (value == 1) {
+
+		}
+
+	}
+
 
 }
