@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: a4e8718d8b8b4f64d879721fa234fd2b
+timeCreated: 1493671396
+licenseType: Free
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Varela Round
+  fontNames:
+  - Varela Round
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
