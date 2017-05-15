@@ -15,6 +15,9 @@ public class Battle_Script : MonoBehaviour {
 	private float timeHolder;
 	public int knockedOut;
 
+	public GameObject areYouSureObj;	// group of objects for are you sure screen pop up
+	bool battlePaused = false;
+
 	public GameObject enemyPlaceholderObj;
 
 	// AUDIO //
@@ -34,6 +37,7 @@ public class Battle_Script : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		areYouSureObj.SetActive (false);
 		
 		//disables all but one target
 		for (int k = 0; k < catSelectors.Count; k++) {
@@ -117,104 +121,107 @@ public class Battle_Script : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-		cats [targetIndex].GetComponent<Cat> ().Hp = catHP;
+		if (!battlePaused) {
+			cats [targetIndex].GetComponent<Cat> ().Hp = catHP;
 
-		for(int n=0; n < timers.Length; n++){
-			timers[n] += Time.deltaTime; 		//time for Cat to attack
-		}
-		//----Cat Attack
-		for (int m = 0; m <= catsInLvl; m++) {
-			if (timers[m] >= cats [m].GetComponent<Cat> ().AttackRate && cats[m].activeSelf) {
-				timers[m] = 0;
-				int rand = Random.Range (0, 30);
+			for(int n=0; n < timers.Length; n++){
+				timers[n] += Time.deltaTime; 		//time for Cat to attack
+			}
+			//----Cat Attack
+			for (int m = 0; m <= catsInLvl; m++) {
+				if (timers[m] >= cats [m].GetComponent<Cat> ().AttackRate && cats[m].activeSelf) {
+					timers[m] = 0;
+					int rand = Random.Range (0, 30);
 
-				int agr = 0;
-				int target = 0;
-				if (rand >= 10) {
-					for (int j = 0; j < dogs.Length; j++) {
-						if (dogs [j].GetComponent<Dog_Script> ().koed == false) {
-							if (dogs [j].GetComponent<Dog_Script> ().aggro >= agr) { 	//if next dog has higher aggro, make his target
-								agr = dogs [j].GetComponent<Dog_Script> ().aggro;
-								target = j;
+					int agr = 0;
+					int target = 0;
+					if (rand >= 10) {
+						for (int j = 0; j < dogs.Length; j++) {
+							if (dogs [j].GetComponent<Dog_Script> ().koed == false) {
+								if (dogs [j].GetComponent<Dog_Script> ().aggro >= agr) { 	//if next dog has higher aggro, make his target
+									agr = dogs [j].GetComponent<Dog_Script> ().aggro;
+									target = j;
+								}
 							}
 						}
+						//Debug.Log ("Chose strongest");
+					} else {
+						target = Random.Range (0, dogs.Length);
+
+						if (dogs [target].GetComponent<Dog_Script> ().koed) { 	//if the dog is KOed, pick new target //CAN CAUSE A CRASH IN FIRST LEVEL (all enemies go for the highest aggro seems to kill the game)
+							//target = Random.Range (0, dogs.Length);
+							target++;
+							if (target >= dogs.Length)
+								target = 0;
+						}
+
+						//Debug.Log ("Chose random");
 					}
-					//Debug.Log ("Chose strongest");
-				} else {
-					target = Random.Range (0, dogs.Length);
-
-					if (dogs [target].GetComponent<Dog_Script> ().koed) { 	//if the dog is KOed, pick new target //CAN CAUSE A CRASH IN FIRST LEVEL (all enemies go for the highest aggro seems to kill the game)
-						//target = Random.Range (0, dogs.Length);
-						target++;
-						if (target >= dogs.Length)
-							target = 0;
-					}
-
-					//Debug.Log ("Chose random");
-				}
-				//Debug.Log (cats [m].GetComponent<Cat> ().CatName + " attacked");
-				dogs [target].GetComponent<Dog_Script> ().TakeDamage (); 	//dog takes damage
-			}
-		}
-
-		//-----Checking for KOs
-		for (int i = 0; i < dogs.Length; i++) {							//checks for KOed dogs
-			if (dogs [i] != null) {
-				if (dogs [i].GetComponent<Dog_Script> ().koed) {
-					dogs [i].GetComponent<Renderer> ().enabled = false;		//hides KOed ones
-					buttons [i].enabled = false;
+					//Debug.Log (cats [m].GetComponent<Cat> ().CatName + " attacked");
+					dogs [target].GetComponent<Dog_Script> ().TakeDamage (); 	//dog takes damage
 				}
 			}
-		}
 
-		//Change Cat targets when one dies
-		if (catHP <= 0 && catCount > 0) {
-			catSelectors [targetIndex].GetComponent<Image> ().color = temp; //makes current selector invisible
-			cats[targetIndex].SetActive (false);	//disables that cat
-			catSelectors [targetIndex].enabled = false;
-
-
-			for (int j = 0; j < catsInLvl; j++) {
-				if (!cats [targetIndex].activeSelf) {
-					targetIndex++;
-					if (targetIndex > catsInLvl) {
-						targetIndex = 0;
+			//-----Checking for KOs
+			for (int i = 0; i < dogs.Length; i++) {							//checks for KOed dogs
+				if (dogs [i] != null) {
+					if (dogs [i].GetComponent<Dog_Script> ().koed) {
+						dogs [i].GetComponent<Renderer> ().enabled = false;		//hides KOed ones
+						buttons [i].enabled = false;
 					}
 				}
-				else
-					break;
 			}
 
-			catHP = cats[targetIndex].GetComponent<Cat> ().Hp;
-			catCount--;
-			Debug.Log (catCount);
-			catSelectors [targetIndex].GetComponent<Image> ().color = Color.white;
+			//Change Cat targets when one dies
+			if (catHP <= 0 && catCount > 0) {
+				catSelectors [targetIndex].GetComponent<Image> ().color = temp; //makes current selector invisible
+				cats[targetIndex].SetActive (false);	//disables that cat
+				catSelectors [targetIndex].enabled = false;
+
+
+				for (int j = 0; j < catsInLvl; j++) {
+					if (!cats [targetIndex].activeSelf) {
+						targetIndex++;
+						if (targetIndex > catsInLvl) {
+							targetIndex = 0;
+						}
+					}
+					else
+						break;
+				}
+
+				catHP = cats[targetIndex].GetComponent<Cat> ().Hp;
+				catCount--;
+				Debug.Log (catCount);
+				catSelectors [targetIndex].GetComponent<Image> ().color = Color.white;
+			}
+			// END BATTLE STUFF
+			if (knockedOut >= dogs.Length || catCount <=0) {								// if all KOed, exit battle OR kill cat
+				for (int i = 0; i < dogs.Length; i++) {
+					Destroy (dogs[i]);
+				}
+				//GameObject.Find ("GameManager").GetComponent<Game_Manager> ().ChangeState ("map");
+				//ss.UnloadScene(2);
+
+				if (knockedOut >= dogs.Length) {
+					// change gamestate SCREAMS
+					GameObject.Find ("GameManager").GetComponent<Game_Manager> ().ChangeState("lose");
+				} else if (catCount <= 0) {
+					GameObject.Find ("GameManager").GetComponent<Game_Manager> ().ChangeState("win");
+				}
+
+				ss.AddScene(7);	// kEEPS GETTING CALLED INFINITELY
+				Destroy(ui[0]);
+				Destroy(ui[1]);
+				Destroy(gameObject);	// kill self
+
+				// this makes it go straight back to map, IF COMMENTED OUT DONT WORRY NOT AN ERROR WHEN U PLAY
+				//GameObject.Find ("GameManager").GetComponent<Game_Manager> ().ToMapScene(2);
+			}
+
+			catHP = cats [targetIndex].GetComponent<Cat> ().Hp;
 		}
-		// END BATTLE STUFF
-		if (knockedOut >= dogs.Length || catCount <=0) {								// if all KOed, exit battle OR kill cat
-			for (int i = 0; i < dogs.Length; i++) {
-				Destroy (dogs[i]);
-			}
-			//GameObject.Find ("GameManager").GetComponent<Game_Manager> ().ChangeState ("map");
-			//ss.UnloadScene(2);
 
-			if (knockedOut >= dogs.Length) {
-				// change gamestate SCREAMS
-				GameObject.Find ("GameManager").GetComponent<Game_Manager> ().ChangeState("lose");
-			} else if (catCount <= 0) {
-				GameObject.Find ("GameManager").GetComponent<Game_Manager> ().ChangeState("win");
-			}
-
-			ss.AddScene(7);	// kEEPS GETTING CALLED INFINITELY
-			Destroy(ui[0]);
-			Destroy(ui[1]);
-			Destroy(gameObject);	// kill self
-
-			// this makes it go straight back to map, IF COMMENTED OUT DONT WORRY NOT AN ERROR WHEN U PLAY
-			//GameObject.Find ("GameManager").GetComponent<Game_Manager> ().ToMapScene(2);
-		}
-
-		catHP = cats [targetIndex].GetComponent<Cat> ().Hp;
 	}
 
 
@@ -251,13 +258,7 @@ public class Battle_Script : MonoBehaviour {
 		catHP = cats[targetIndex].GetComponent<Cat> ().Hp;
 		Debug.Log (catHP);
 	}
-		
-	/// <summary>
-	/// Loads the specified battle--FOR NOW hardcoded single battle
-	/// </summary>
-	void LoadBattle(){
 
-	}
 
 	/// <summary>
 	/// To the Win or Lose scene depending on value.
@@ -273,6 +274,23 @@ public class Battle_Script : MonoBehaviour {
 
 		}
 
+	}
+
+	public void PromptEscape(){
+		areYouSureObj.SetActive (true);
+		battlePaused = true;
+	}
+
+	/// <summary>
+	/// only to use from paused/areyousure screen
+	/// </summary>
+	public void ReturnToBattle() {
+		areYouSureObj.SetActive (false);
+		battlePaused = false;
+	}
+
+	public void EscapeBattle() {
+		GameObject.Find ("GameManager").GetComponent<Game_Manager> ().ToMapScene(2);
 	}
 
 
