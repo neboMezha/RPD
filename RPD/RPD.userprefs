@@ -2,13 +2,13 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Battle_Script.cs">
     <Files>
-      <File FileName="Assets\Scripts\Dog_Script.cs" Line="150" Column="3" />
-      <File FileName="Assets\Scripts\Battle_Script.cs" Line="151" Column="81" />
-      <File FileName="Assets\Scripts\Cat.cs" Line="49" Column="18" />
-      <File FileName="Assets\Scripts\Loader.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Dog_Script.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Battle_Script.cs" Line="293" Column="79" />
+      <File FileName="Assets\Scripts\Game_Manager.cs" Line="253" Column="11" />
+      <File FileName="Assets\Scripts\Bounce.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Scene_Script.cs" Line="22" Column="1" />
+      <File FileName="Assets\Scripts\WinLoseScript.cs" Line="61" Column="3" />
       <File FileName="Assets\Scripts\Summon_Script.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Game_Manager.cs" Line="53" Column="2" />
-      <File FileName="Assets\Scripts\MapButton.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
