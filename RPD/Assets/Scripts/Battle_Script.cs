@@ -16,6 +16,7 @@ public class Battle_Script : MonoBehaviour {
 	public int knockedOut;
 
 	public GameObject areYouSureObj;	// group of objects for are you sure screen pop up
+	public GameObject escButtonObj;
 	bool battlePaused = false;
 
 	public GameObject enemyPlaceholderObj;
@@ -175,6 +176,7 @@ public class Battle_Script : MonoBehaviour {
 			//Change Cat targets when one dies
 			if (catHP <= 0 && catCount > 0) {
 				catSelectors [targetIndex].GetComponent<Image> ().color = temp; //makes current selector invisible
+				audio.PlayOneShot(catDamageSound,1.0f);
 				cats[targetIndex].SetActive (false);	//disables that cat
 				catSelectors [targetIndex].enabled = false;
 
@@ -210,10 +212,10 @@ public class Battle_Script : MonoBehaviour {
 					GameObject.Find ("GameManager").GetComponent<Game_Manager> ().ChangeState("win");
 				}
 
-				ss.AddScene(7);	// kEEPS GETTING CALLED INFINITELY
+				ss.AddScene(7);	
 				Destroy(ui[0]);
 				Destroy(ui[1]);
-				Destroy(gameObject);	// kill self
+				Destroy(gameObject);	// kill self so screen isnt called over and over agaibn
 
 				// this makes it go straight back to map, IF COMMENTED OUT DONT WORRY NOT AN ERROR WHEN U PLAY
 				//GameObject.Find ("GameManager").GetComponent<Game_Manager> ().ToMapScene(2);
@@ -266,7 +268,7 @@ public class Battle_Script : MonoBehaviour {
 	/// </summary>
 	/// <param name="value">0 - Lose. 1 - win.</param>
 	void ToWinLose(int value) {
-		// TO DO: play win or lose noise
+		escButtonObj.SetActive (false);
 		ss.AddScene(7);
 		if (value == 0) {
 
@@ -290,6 +292,9 @@ public class Battle_Script : MonoBehaviour {
 	}
 
 	public void EscapeBattle() {
+		for (int i = 0; i < dogs.Length; i++) {
+			Destroy (dogs[i]);
+		}
 		GameObject.Find ("GameManager").GetComponent<Game_Manager> ().ToMapScene(2);
 	}
 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-
+[RequireComponent(typeof(AudioSource))]
 public class WinLoseScript : MonoBehaviour {
 	public GameObject[] dogPositions = new GameObject[3];
 	public GameObject numBonesTextObj;
@@ -12,9 +12,14 @@ public class WinLoseScript : MonoBehaviour {
 	public GameObject winObjs;		// groups for winlose scene
 	public GameObject loseObjs;
 
+	new AudioSource audio;
+	public AudioClip winBGM;
+	public AudioClip loseBGM;
+
 
 	// Use this for initialization
 	void Start () {
+		audio = GetComponent<AudioSource>();
 
 		// show dogs
 		for (int i = 0; i < dogPositions.Length; i++) {
@@ -23,7 +28,8 @@ public class WinLoseScript : MonoBehaviour {
 
 		// load stuff according to game state win or lose
 		if (GameObject.Find("GameManager").GetComponent<Game_Manager>().GetWinLoseState() == 1) {	// WIN
-
+			audio.clip = winBGM;
+			audio.Play();
 			numBoneReward = Random.Range(3, 7);
 			GameObject.Find ("GameManager").GetComponent<Game_Manager> ().bones += numBoneReward;
 
@@ -34,7 +40,8 @@ public class WinLoseScript : MonoBehaviour {
 			loseObjs.SetActive (false);
 		}
 		else if (GameObject.Find("GameManager").GetComponent<Game_Manager>().GetWinLoseState() == 2) {	// LOSE
-
+			audio.clip = loseBGM;
+			audio.Play();
 			numBoneReward = 2;
 			GameObject.Find ("GameManager").GetComponent<Game_Manager>().bones += numBoneReward;
 
@@ -58,7 +65,9 @@ public class WinLoseScript : MonoBehaviour {
 	}
 
 	public void Back(){
+		audio.Stop ();
 		GameObject.Find ("GameManager").GetComponent<Game_Manager> ().ToMapScene(7);
 		GameObject.Find ("GameManager").GetComponent<Game_Manager> ().ToMapScene(2);
+
 	}
 }

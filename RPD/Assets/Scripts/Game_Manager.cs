@@ -28,8 +28,6 @@ public class Game_Manager : MonoBehaviour {
 	new AudioSource audio;
 	public AudioClip mapBGM;
 	public AudioClip battleBGM;
-	public AudioClip winBGM;
-	public AudioClip loseBGM;
 
 	public AudioClip selectionSound;
 	public AudioClip cancelSound;
